@@ -165,7 +165,7 @@ def compile_page(url, url_num, url_type, url_name):
         if url_type == "-m":
             document_type = "Разбалловка"
         else:
-            document_type = "Условие"
+            document_type = "Условие задачи"
 
     
     r = requests.get(url) #url - ссылка
