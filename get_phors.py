@@ -93,9 +93,9 @@ def save(f, data):
     #Удаление неинформативного куска
     first_idx = data.find('<a', 0) 
     while first_idx != -1:
-        first_idx = data.find('<a', 0)
         last_idx = data.find('</a>', first_idx)
         data = data[:first_idx:] + data[last_idx + len('</a>')::]
+        first_idx = data.find('<a', 0)
 
     first_idx = data.find('<', 0)
 
