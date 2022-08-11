@@ -9,10 +9,14 @@ def no_spaces(string):
         return string
     string = string.replace("\n", "")
     string = string.replace("\r", "")
-    string = string.replace("###!123###", "\n")
     string = string.lstrip()#Убирает пробелы в начале строки
     string = string.rstrip()#Убирает пробелы в конце строки
+    
+##    while string.find("  ", 0) >= 0: string = string.replace("  ", " ")
+    string = string.replace("###!123###", "\n") #Бывший  <br />
 
+    string = string.replace("$$\n\n$$", "")
+    
     string = string.replace("&gt;", ">")
     string = string.replace("&lt;", "<")
     string = string.replace("&mdash;", "-")
@@ -22,6 +26,7 @@ def no_spaces(string):
     string = string.replace("&times;", "$\\times$")
     string = string.replace("&laquo;", '"')
     string = string.replace("&raquo;", '"')
+    string = string.replace("$,$", ", \,")
     return string
 
 
@@ -58,22 +63,28 @@ def save_QBlock(f, data):
     first_idx = data.find('<span class="label label-lg font-weight-normal label-rounded label-inline label-primary mr-2">', 0)
     if first_idx != -1:
         name_first_idx = data.find('>', first_idx) + 1
-        name_last_idx = data.find('<sup>', name_first_idx)
-        if name_last_idx != -1:
-            name_str = data[name_first_idx:name_last_idx:]
-            name_str = no_spaces(name_str)
+        name_last_idx = data.find('</span>', name_first_idx)
+        if name_last_idx == -1: return
+        name_str = data[name_first_idx:name_last_idx:]
+        
+        cost_first_idx = name_str.find('<sup>&nbsp;', 0)
+        if cost_first_idx != -1:
+            cost_last_idx = name_str.find('</sup>', 0)
+            cost_str = name_str[cost_first_idx + len('<sup>&nbsp;'):cost_last_idx:]
+            name_str = name_str[:cost_first_idx:] + name_str[cost_last_idx + len('</sup>')::]
+        else: cost_str = ""
 
-            cost_first_idx = name_last_idx + len('<sup>&nbsp;')
-            cost_last_idx = data.find('</sup>', cost_first_idx)
-            cost_str = data[cost_first_idx:cost_last_idx:]
+        name_str = no_spaces(name_str)
 
-            first_idx = data.find('</span>', first_idx)
-            last_idx = data.find("<", first_idx + len('</span>'))
-            
-            block = data[first_idx + len('</span>'):last_idx:]
-            block = no_spaces(block)
-            
-            f.write("\QBlock{" + name_str + "}{" + cost_str + "}{" + block + "}\n\n")
+        first_idx = data.find('</span>', first_idx)
+        if first_idx == -1: return
+        last_idx = data.find("<phors-answer", first_idx + len('</span>'))
+        if last_idx == -1: return
+        
+        block = data[first_idx + len('</span>'):last_idx:]
+        block = no_spaces(block)
+        
+        f.write("\QBlock{" + name_str + "}{" + cost_str + "}{" + block + "}\n\n")
 
 
 def save(f, data):
