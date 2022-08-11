@@ -288,7 +288,7 @@ def error():
 print("Введите номер страницы на pho.rs")
 url_num = input()
 url_num = str(url_num)
-print("Выберите, что нужно собрать: Условие (t), Решение (s), Разбалловка (m) или сразу все (a)")
+print("Выберите, что нужно собрать: Условие (t), Решение (s), Разбалловка (m), Подсказка (h) или сразу все (a)")
 url_type = input()
 print('Введите источник задачи. Например, "Χ21-Τ6"')
 url_name = input()
@@ -298,7 +298,7 @@ url_name = input()
 ##    url_type = "t"
 ##    url_name = "T" + url_num
 
-if (not url_num.isdigit()) or not (url_type == 't' or url_type == 's' or url_type == 'm' or url_type == 'a'):
+if (not url_num.isdigit()) or not (url_type == 't' or url_type == 's' or url_type == 'm' or url_type == 'h' or url_type == 'a'):
     error()
 else:
     url = 'https://pho.rs/p/'
@@ -307,6 +307,7 @@ else:
         compile_page(url, url_num, "", url_name)
         compile_page(url + '/s', url_num, "-s", url_name)
         compile_page(url + '/m', url_num, "-m", url_name)
+        compile_page(url + '/h', url_num, "-h", url_name)
     else:
         if url_type != "t":
               url = url + '/' + str(url_type)
