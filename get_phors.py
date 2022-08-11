@@ -27,6 +27,10 @@ def no_spaces(string):
     string = string.replace("&laquo;", '"')
     string = string.replace("&raquo;", '"')
     string = string.replace("$,$", ", \,")
+
+    #Костыль про patch-clamp
+    string = string.replace("_\max", "_{\max}")
+    
     return string
 
 
@@ -78,7 +82,14 @@ def save_QBlock(f, data):
 
         first_idx = data.find('</span>', first_idx)
         if first_idx == -1: return
-        last_idx = data.find("<phors-answer", first_idx + len('</span>'))
+        last_idx = -1
+        last_idx_1 = data.find("<phors-answer", first_idx + len('</span>'))
+        last_idx_2 = data.find("<p></p>", first_idx + len('</span>'))
+        if (last_idx_1 != -1) and (last_idx_2 > last_idx_1 or last_idx_2 == -1):
+            last_idx = last_idx_1
+        else:
+            last_idx = last_idx_2
+        #print(last_idx, " | ", last_idx_1, " ### ", last_idx_2)
         if last_idx == -1: return
         
         block = data[first_idx + len('</span>'):last_idx:]
@@ -140,7 +151,6 @@ def save(f, data):
                     #Картинка
                     first_idx = data.find('<img src="', 0)
                     if first_idx != -1:
-                        #first_idx = data.find("_files/", first_idx) + len("_files/")
                         last_idx = data.find('.jpeg', first_idx)
                         pic_name = data[first_idx + len('<img src="'):last_idx:] + '.jpeg'
                         
@@ -192,10 +202,9 @@ def compile_page(url, url_num, url_type, url_name):
     if problem_name.find("Metronic | Login Page v3", 0) >= 0:
         print(url_num + " This page is empty now")
         return
+    problem_name = problem_name.replace("?", "")
 
     file_name = url_name + " " + problem_name + url_type
-
-
 
     last_idx = 0
     first_idx = html.find("/p/img/", last_idx + 1)
@@ -256,7 +265,7 @@ def compile_page(url, url_num, url_type, url_name):
             if second_idx >= 0 and (second_idx < first_idx or first_idx < 0) and (third_idx > second_idx or third_idx < 0):
                 last_idx = html.find('<p></p>', second_idx)
                 if last_idx >= 0:
-                    data = html[second_idx + len('<div class="card-body card-body-phors">'):last_idx:]
+                    data = html[second_idx + len('<div class="card-body card-body-phors">'):last_idx + len('<p></p>'):]
                     save_QBlock(f, data)
                     second_idx = html.find('<div class="card-body card-body-phors">', last_idx)
                 else: second_idx = -1
@@ -279,7 +288,7 @@ def error():
 print("Введите номер страницы на pho.rs")
 url_num = input()
 url_num = str(url_num)
-print("Выберите, что нужно собрать: Условие (t), Решение (s), Разбалловка (m)")
+print("Выберите, что нужно собрать: Условие (t), Решение (s), Разбалловка (m) или сразу все (a)")
 url_type = input()
 print('Введите источник задачи. Например, "Χ21-Τ6"')
 url_name = input()
@@ -289,15 +298,18 @@ url_name = input()
 ##    url_type = "t"
 ##    url_name = "T" + url_num
 
-if (not url_num.isdigit()) or not (url_type == 't' or url_type == 's' or url_type == 'm'):
+if (not url_num.isdigit()) or not (url_type == 't' or url_type == 's' or url_type == 'm' or url_type == 'a'):
     error()
 else:
     url = 'https://pho.rs/p/'
     url = url + str(url_num)
-    if url_type != "t":
-          url = url + '/' + str(url_type)
-          url_type = "-" + url_type
-    else: url_type = ""
-    compile_page(url, url_num, url_type, url_name)
-      
-
+    if url_type == "a":
+        compile_page(url, url_num, "", url_name)
+        compile_page(url + '/s', url_num, "-s", url_name)
+        compile_page(url + '/m', url_num, "-m", url_name)
+    else:
+        if url_type != "t":
+              url = url + '/' + str(url_type)
+              url_type = "-" + url_type
+        else: url_type = ""
+        compile_page(url, url_num, url_type, url_name)
