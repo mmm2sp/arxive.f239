@@ -34,6 +34,15 @@ def no_spaces(string):
     return string
 
 
+def clear_data(data, command):
+    '''Вырезает куски вида <a...> ... </a> и <i...> ... </i>'''
+    first_idx = data.find('<' + command, 0) 
+    while first_idx != -1:
+        last_idx = data.find('</' + command + '>', first_idx)
+        data = data[:first_idx:] + data[last_idx + len('</' + command + '>')::]
+        first_idx = data.find('<' + command, 0)
+    return data
+
 def save_MScheme(f, data):
     data = data.replace("<br />", "###!123###")
     first_idx = data.find('<td style="width:90%;">', 0)
@@ -65,37 +74,39 @@ def save_MScheme(f, data):
 def save_QBlock(f, data):
     data = data.replace("<br />", "###!123###")
     first_idx = data.find('<span class="label label-lg font-weight-normal label-rounded label-inline label-primary mr-2">', 0)
-    if first_idx != -1:
-        name_first_idx = data.find('>', first_idx) + 1
-        name_last_idx = data.find('</span>', name_first_idx)
-        if name_last_idx == -1: return
-        name_str = data[name_first_idx:name_last_idx:]
-        
-        cost_first_idx = name_str.find('<sup>&nbsp;', 0)
-        if cost_first_idx != -1:
-            cost_last_idx = name_str.find('</sup>', 0)
-            cost_str = name_str[cost_first_idx + len('<sup>&nbsp;'):cost_last_idx:]
-            name_str = name_str[:cost_first_idx:] + name_str[cost_last_idx + len('</sup>')::]
-        else: cost_str = ""
+    if first_idx == -1: return
+    
+    name_first_idx = data.find('>', first_idx) + 1
+    name_last_idx = data.find('</span>', name_first_idx)
+    if name_last_idx == -1: return
+    name_str = data[name_first_idx:name_last_idx:]
+    name_str = clear_data(name_str, "i")
+    
+    cost_first_idx = name_str.find('<sup>&nbsp;', 0)
+    if cost_first_idx != -1:
+        cost_last_idx = name_str.find('</sup>', 0)
+        cost_str = name_str[cost_first_idx + len('<sup>&nbsp;'):cost_last_idx:]
+        name_str = name_str[:cost_first_idx:] + name_str[cost_last_idx + len('</sup>')::]
+    else: cost_str = ""
 
-        name_str = no_spaces(name_str)
+    name_str = no_spaces(name_str)
 
-        first_idx = data.find('</span>', first_idx)
-        if first_idx == -1: return
-        last_idx = -1
-        last_idx_1 = data.find("<phors-answer", first_idx + len('</span>'))
-        last_idx_2 = data.find("<p></p>", first_idx + len('</span>'))
-        if (last_idx_1 != -1) and (last_idx_2 > last_idx_1 or last_idx_2 == -1):
-            last_idx = last_idx_1
-        else:
-            last_idx = last_idx_2
-        #print(last_idx, " | ", last_idx_1, " ### ", last_idx_2)
-        if last_idx == -1: return
-        
-        block = data[first_idx + len('</span>'):last_idx:]
-        block = no_spaces(block)
-        
-        f.write("\QBlock{" + name_str + "}{" + cost_str + "}{" + block + "}\n\n")
+    first_idx = data.find('</span>', first_idx)
+    if first_idx == -1: return
+    last_idx = -1
+    last_idx_1 = data.find("<phors-answer", first_idx + len('</span>'))
+    last_idx_2 = data.find("<p></p>", first_idx + len('</span>'))
+    if (last_idx_1 != -1) and (last_idx_2 > last_idx_1 or last_idx_2 == -1):
+        last_idx = last_idx_1
+    else:
+        last_idx = last_idx_2
+    #print(last_idx, " | ", last_idx_1, " ### ", last_idx_2)
+    if last_idx == -1: return
+    
+    block = data[first_idx + len('</span>'):last_idx:]
+    block = no_spaces(block)
+    
+    f.write("\QBlock{" + name_str + "}{" + cost_str + "}{" + block + "}\n\n")
 
 
 def save(f, data):
@@ -113,12 +124,7 @@ def save(f, data):
         data = data[:first_idx:] + data[last_idx + len('</p>')::]
 
     #Удаление неинформативного куска
-    first_idx = data.find('<a', 0) 
-    while first_idx != -1:
-        last_idx = data.find('</a>', first_idx)
-        data = data[:first_idx:] + data[last_idx + len('</a>')::]
-        first_idx = data.find('<a', 0)
-
+    data = clear_data(data, 'a')
     first_idx = data.find('<', 0)
 
     #Если в дате только текст
@@ -279,6 +285,7 @@ def compile_page(url, url_num, url_type, url_name):
     f.close()
     os.system('pdflatex "' + file_name + '.tex"')
     os.system('pdflatex "' + file_name + '.tex"')
+    os.system('"' + file_name + '.pdf"')
 
 #############################
 
