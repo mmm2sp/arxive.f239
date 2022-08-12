@@ -43,6 +43,35 @@ def clear_data(data, command):
         first_idx = data.find('<' + command, 0)
     return data
 
+def insert_picture(f, data):
+    #Картинка
+    first_idx = data.find('<img src="', 0)
+    if first_idx == -1: return data
+    last_idx = data.find('.jpeg', first_idx)
+    pic_name = data[first_idx + len('<img src="'):last_idx:] + '.jpeg'
+    
+    first_idx = data.find('style=', last_idx) + len ('style=')
+    last_idx = data.find('/>', first_idx)
+    pic_params = data[first_idx:last_idx:]
+    pic_params = no_spaces(pic_params)
+
+    first_idx = data.find('<div class="kt-section__info"', last_idx)
+    if first_idx != -1:
+        first_idx = data.find('>', first_idx) + 1
+        last_idx = data.find('</div>', first_idx)
+        pic_sub = data[first_idx:last_idx:]
+    else:
+        pic_sub = ''
+    first_idx = data.find('<div class="col-md-8 latexinput" >', 0)
+    if first_idx != -1:
+        last_idx = data.find('</div>', first_idx)
+        text = data[first_idx + len('<div class="col-md-8 latexinput" >'):last_idx:]
+        text = no_spaces(text)
+    else:
+        text = ""
+    f.write("\QPicture{" + pic_name + "}{" + pic_params + "}{" + pic_sub + "}{" + text + "}\n\n")
+    return data[:data.find('<img src="', 0):] + data[data.find('/>', 0) + 2::]
+
 def save_MScheme(f, data):
     data = data.replace("<br />", "###!123###")
     first_idx = data.find('<td style="width:90%;">', 0)
@@ -59,6 +88,7 @@ def save_MScheme(f, data):
             version = ""    
        
         text = no_spaces(text)
+        text = insert_picture(f, text)
 
         first_idx = data.find('<td style="width:10%; text-align: center;">', last_idx)
         last_idx = data.find('</td>', first_idx)
@@ -152,36 +182,18 @@ def save(f, data):
                     last_idx = data.find('</span>', first_idx)
                     answer_block = data[first_idx + len('<span>Ответ:'):last_idx:]
                     answer_block = no_spaces(answer_block)
+                    answer_block = insert_picture(f, answer_block)
                     f.write("\ABlock{" + answer_block + "}\n\n")
                 else:
                     #Картинка
-                    first_idx = data.find('<img src="', 0)
-                    if first_idx != -1:
-                        last_idx = data.find('.jpeg', first_idx)
-                        pic_name = data[first_idx + len('<img src="'):last_idx:] + '.jpeg'
-                        
-                        first_idx = data.find('style=', last_idx) + len ('style=')
-                        last_idx = data.find('/>', first_idx)
-                        pic_params = data[first_idx:last_idx:]
-                        pic_params = no_spaces(pic_params)
-
-                        first_idx = data.find('<div class="kt-section__info"', last_idx)
-                        if first_idx != -1:
-                            first_idx = data.find('>', first_idx) + 1
-                            last_idx = data.find('</div>', first_idx)
-                            pic_sub = data[first_idx:last_idx:]
-                        else:
-                            pic_sub = ''
-                        first_idx = data.find('<div class="col-md-8 latexinput" >', 0)
-                        if first_idx != -1:
-                            last_idx = data.find('</div>', first_idx)
-                            text = data[first_idx + len('<div class="col-md-8 latexinput" >'):last_idx:]
-                            text = no_spaces(text)
-                        else:
-                            text = ""
-                        f.write("\QPicture{" + pic_name + "}{" + pic_params + "}{" + pic_sub + "}{" + text + "}\n\n")
-                    else:
-                         print("idx = "+ str(old_idx))
+                    data = insert_picture(f, data)
+                    first_idx = data.find('<', 0)
+                    print(data)
+                    if first_idx == -1:
+                        data = no_spaces(data)
+                        if data == "": return
+                        f.write("\QText{" + data + "}")
+                        f.write("\n\n")
                     
                     
                 
