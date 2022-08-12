@@ -1,4 +1,4 @@
-.html ##Уж очень много лишнего грузим
+*.html ##Уж очень много лишнего грузим
 
 
 ## Core latex/pdflatex auxiliary files:
