@@ -1,1 +1,0 @@
-This file and folder were created automatically. There will be pictures that are usefull to create pdf. Do not remove it
