@@ -9,10 +9,14 @@ def no_spaces(string):
         return string
     string = string.replace("\n", "")
     string = string.replace("\r", "")
-    string = string.replace("###!123###", "\n")
     string = string.lstrip()#Убирает пробелы в начале строки
     string = string.rstrip()#Убирает пробелы в конце строки
+    
+##    while string.find("  ", 0) >= 0: string = string.replace("  ", " ")
+    string = string.replace("###!123###", "\n") #Бывший  <br />
 
+    string = string.replace("$$\n\n$$", "")
+    
     string = string.replace("&gt;", ">")
     string = string.replace("&lt;", "<")
     string = string.replace("&mdash;", "-")
@@ -22,8 +26,51 @@ def no_spaces(string):
     string = string.replace("&times;", "$\\times$")
     string = string.replace("&laquo;", '"')
     string = string.replace("&raquo;", '"')
+    string = string.replace("$,$", ", \,")
+
+    #Костыль про patch-clamp
+    string = string.replace("_\max", "_{\max}")
+    
     return string
 
+
+def clear_data(data, command):
+    '''Вырезает куски вида <a...> ... </a> и <i...> ... </i>'''
+    first_idx = data.find('<' + command, 0) 
+    while first_idx != -1:
+        last_idx = data.find('</' + command + '>', first_idx)
+        data = data[:first_idx:] + data[last_idx + len('</' + command + '>')::]
+        first_idx = data.find('<' + command, 0)
+    return data
+
+def insert_picture(f, data):
+    #Картинка
+    first_idx = data.find('<img src="', 0)
+    if first_idx == -1: return data
+    last_idx = data.find('.jpeg', first_idx)
+    pic_name = data[first_idx + len('<img src="'):last_idx:] + '.jpeg'
+    
+    first_idx = data.find('style=', last_idx) + len ('style=')
+    last_idx = data.find('/>', first_idx)
+    pic_params = data[first_idx:last_idx:]
+    pic_params = no_spaces(pic_params)
+
+    first_idx = data.find('<div class="kt-section__info"', last_idx)
+    if first_idx != -1:
+        first_idx = data.find('>', first_idx) + 1
+        last_idx = data.find('</div>', first_idx)
+        pic_sub = data[first_idx:last_idx:]
+    else:
+        pic_sub = ''
+    first_idx = data.find('<div class="col-md-8 latexinput" >', 0)
+    if first_idx != -1:
+        last_idx = data.find('</div>', first_idx)
+        text = data[first_idx + len('<div class="col-md-8 latexinput" >'):last_idx:]
+        text = no_spaces(text)
+    else:
+        text = ""
+    f.write("\QPicture{" + pic_name + "}{" + pic_params + "}{" + pic_sub + "}{" + text + "}\n\n")
+    return data[:data.find('<img src="', 0):] + data[data.find('/>', 0) + 2::]
 
 def save_MScheme(f, data):
     data = data.replace("<br />", "###!123###")
@@ -41,6 +88,7 @@ def save_MScheme(f, data):
             version = ""    
        
         text = no_spaces(text)
+        text = insert_picture(f, text)
 
         first_idx = data.find('<td style="width:10%; text-align: center;">', last_idx)
         last_idx = data.find('</td>', first_idx)
@@ -56,24 +104,39 @@ def save_MScheme(f, data):
 def save_QBlock(f, data):
     data = data.replace("<br />", "###!123###")
     first_idx = data.find('<span class="label label-lg font-weight-normal label-rounded label-inline label-primary mr-2">', 0)
-    if first_idx != -1:
-        name_first_idx = data.find('>', first_idx) + 1
-        name_last_idx = data.find('<sup>', name_first_idx)
-        if name_last_idx != -1:
-            name_str = data[name_first_idx:name_last_idx:]
-            name_str = no_spaces(name_str)
+    if first_idx == -1: return
+    
+    name_first_idx = data.find('>', first_idx) + 1
+    name_last_idx = data.find('</span>', name_first_idx)
+    if name_last_idx == -1: return
+    name_str = data[name_first_idx:name_last_idx:]
+    name_str = clear_data(name_str, "i")
+    
+    cost_first_idx = name_str.find('<sup>&nbsp;', 0)
+    if cost_first_idx != -1:
+        cost_last_idx = name_str.find('</sup>', 0)
+        cost_str = name_str[cost_first_idx + len('<sup>&nbsp;'):cost_last_idx:]
+        name_str = name_str[:cost_first_idx:] + name_str[cost_last_idx + len('</sup>')::]
+    else: cost_str = ""
 
-            cost_first_idx = name_last_idx + len('<sup>&nbsp;')
-            cost_last_idx = data.find('</sup>', cost_first_idx)
-            cost_str = data[cost_first_idx:cost_last_idx:]
+    name_str = no_spaces(name_str)
 
-            first_idx = data.find('</span>', first_idx)
-            last_idx = data.find("<", first_idx + len('</span>'))
-            
-            block = data[first_idx + len('</span>'):last_idx:]
-            block = no_spaces(block)
-            
-            f.write("\QBlock{" + name_str + "}{" + cost_str + "}{" + block + "}\n\n")
+    first_idx = data.find('</span>', first_idx)
+    if first_idx == -1: return
+    last_idx = -1
+    last_idx_1 = data.find("<phors-answer", first_idx + len('</span>'))
+    last_idx_2 = data.find("<p></p>", first_idx + len('</span>'))
+    if (last_idx_1 != -1) and (last_idx_2 > last_idx_1 or last_idx_2 == -1):
+        last_idx = last_idx_1
+    else:
+        last_idx = last_idx_2
+    #print(last_idx, " | ", last_idx_1, " ### ", last_idx_2)
+    if last_idx == -1: return
+    
+    block = data[first_idx + len('</span>'):last_idx:]
+    block = no_spaces(block)
+    
+    f.write("\QBlock{" + name_str + "}{" + cost_str + "}{" + block + "}\n\n")
 
 
 def save(f, data):
@@ -91,12 +154,7 @@ def save(f, data):
         data = data[:first_idx:] + data[last_idx + len('</p>')::]
 
     #Удаление неинформативного куска
-    first_idx = data.find('<a', 0) 
-    while first_idx != -1:
-        first_idx = data.find('<a', 0)
-        last_idx = data.find('</a>', first_idx)
-        data = data[:first_idx:] + data[last_idx + len('</a>')::]
-
+    data = clear_data(data, 'a')
     first_idx = data.find('<', 0)
 
     #Если в дате только текст
@@ -124,37 +182,18 @@ def save(f, data):
                     last_idx = data.find('</span>', first_idx)
                     answer_block = data[first_idx + len('<span>Ответ:'):last_idx:]
                     answer_block = no_spaces(answer_block)
+                    answer_block = insert_picture(f, answer_block)
                     f.write("\ABlock{" + answer_block + "}\n\n")
                 else:
                     #Картинка
-                    first_idx = data.find('<img src="', 0)
-                    if first_idx != -1:
-                        #first_idx = data.find("_files/", first_idx) + len("_files/")
-                        last_idx = data.find('.jpeg', first_idx)
-                        pic_name = data[first_idx + len('<img src="'):last_idx:] + '.jpeg'
-                        
-                        first_idx = data.find('style=', last_idx) + len ('style=')
-                        last_idx = data.find('/>', first_idx)
-                        pic_params = data[first_idx:last_idx:]
-                        pic_params = no_spaces(pic_params)
-
-                        first_idx = data.find('<div class="kt-section__info"', last_idx)
-                        if first_idx != -1:
-                            first_idx = data.find('>', first_idx) + 1
-                            last_idx = data.find('</div>', first_idx)
-                            pic_sub = data[first_idx:last_idx:]
-                        else:
-                            pic_sub = ''
-                        first_idx = data.find('<div class="col-md-8 latexinput" >', 0)
-                        if first_idx != -1:
-                            last_idx = data.find('</div>', first_idx)
-                            text = data[first_idx + len('<div class="col-md-8 latexinput" >'):last_idx:]
-                            text = no_spaces(text)
-                        else:
-                            text = ""
-                        f.write("\QPicture{" + pic_name + "}{" + pic_params + "}{" + pic_sub + "}{" + text + "}\n\n")
-                    else:
-                         print("idx = "+ str(old_idx))
+                    data = insert_picture(f, data)
+                    first_idx = data.find('<', 0)
+                    print(data)
+                    if first_idx == -1:
+                        data = no_spaces(data)
+                        if data == "": return
+                        f.write("\QText{" + data + "}")
+                        f.write("\n\n")
                     
                     
                 
@@ -181,10 +220,9 @@ def compile_page(url, url_num, url_type, url_name):
     if problem_name.find("Metronic | Login Page v3", 0) >= 0:
         print(url_num + " This page is empty now")
         return
+    problem_name = problem_name.replace("?", "")
 
     file_name = url_name + " " + problem_name + url_type
-
-
 
     last_idx = 0
     first_idx = html.find("/p/img/", last_idx + 1)
@@ -245,7 +283,7 @@ def compile_page(url, url_num, url_type, url_name):
             if second_idx >= 0 and (second_idx < first_idx or first_idx < 0) and (third_idx > second_idx or third_idx < 0):
                 last_idx = html.find('<p></p>', second_idx)
                 if last_idx >= 0:
-                    data = html[second_idx + len('<div class="card-body card-body-phors">'):last_idx:]
+                    data = html[second_idx + len('<div class="card-body card-body-phors">'):last_idx + len('<p></p>'):]
                     save_QBlock(f, data)
                     second_idx = html.find('<div class="card-body card-body-phors">', last_idx)
                 else: second_idx = -1
@@ -259,6 +297,7 @@ def compile_page(url, url_num, url_type, url_name):
     f.close()
     os.system('pdflatex "' + file_name + '.tex"')
     os.system('pdflatex "' + file_name + '.tex"')
+    os.system('"' + file_name + '.pdf"')
 
 #############################
 
@@ -268,7 +307,7 @@ def error():
 print("Введите номер страницы на pho.rs")
 url_num = input()
 url_num = str(url_num)
-print("Выберите, что нужно собрать: Условие (t), Решение (s), Разбалловка (m)")
+print("Выберите, что нужно собрать: Условие (t), Решение (s), Разбалловка (m), Подсказка (h) или сразу все (a)")
 url_type = input()
 print('Введите источник задачи. Например, "Χ21-Τ6"')
 url_name = input()
@@ -278,15 +317,19 @@ url_name = input()
 ##    url_type = "t"
 ##    url_name = "T" + url_num
 
-if (not url_num.isdigit()) or not (url_type == 't' or url_type == 's' or url_type == 'm'):
+if (not url_num.isdigit()) or not (url_type == 't' or url_type == 's' or url_type == 'm' or url_type == 'h' or url_type == 'a'):
     error()
 else:
     url = 'https://pho.rs/p/'
     url = url + str(url_num)
-    if url_type != "t":
-          url = url + '/' + str(url_type)
-          url_type = "-" + url_type
-    else: url_type = ""
-    compile_page(url, url_num, url_type, url_name)
-      
-
+    if url_type == "a":
+        compile_page(url, url_num, "", url_name)
+        compile_page(url + '/s', url_num, "-s", url_name)
+        compile_page(url + '/m', url_num, "-m", url_name)
+        compile_page(url + '/h', url_num, "-h", url_name)
+    else:
+        if url_type != "t":
+              url = url + '/' + str(url_type)
+              url_type = "-" + url_type
+        else: url_type = ""
+        compile_page(url, url_num, url_type, url_name)

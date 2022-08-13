@@ -1,3 +1,6 @@
+*.html ##Уж очень много лишнего грузим
+
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
