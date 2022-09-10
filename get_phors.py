@@ -34,6 +34,7 @@ def no_spaces(string):
     string = string.replace("&times;", "$\\times$")
     string = string.replace("&laquo;", '"')
     string = string.replace("&raquo;", '"')
+    string = string.replace("&quot;", '"')
     string = string.replace("$,$", ", \,")
 
     #Костыль про patch-clamp
@@ -205,16 +206,16 @@ def save(f, data):
                     
                     
                 
-def compile_page(url, url_num, url_type, url_name):
+def compile_page(url, url_num, url_type):
+    #Дешифровка типа части задачи
     if url_type == "-s":
-        document_type = "Решение"
+        problem_type = "Решение"
     else:
         if url_type == "-m":
-            document_type = "Разбалловка"
+            problem_type = "Разбалловка"
         else:
-            document_type = "Условие задачи"
-
-    
+            problem_type = "Условие задачи"
+  
     r = requests.get(url) #url - ссылка
     html = r.text
 
@@ -230,8 +231,20 @@ def compile_page(url, url_num, url_type, url_name):
         return
     problem_name = problem_name.replace("?", "")
 
-    file_name = url_name + " " + problem_name + url_type
+    #Считывание источника задачи
+    idx = html.find('<div class="d-flex justify-content-between">', 0)#Источник задачи
+    if idx == -1:
+        problem_source = "Τ"
+    else:
+        idx = html.find('</i>', idx)
+        last_idx = html.find('</a>', idx)
+        problem_source = html[idx + len('</i>'):last_idx]
+        problem_source = no_spaces(problem_source)
+        
 
+    file_name = problem_source + " " + problem_name + url_type
+    file_name = file_name.replace('"', "")
+    #Скачивние картинок со страницы
     last_idx = 0
     first_idx = html.find("/p/img/", last_idx + 1)
     while first_idx >= 0:
@@ -258,23 +271,26 @@ def compile_page(url, url_num, url_type, url_name):
         html = html[:first_idx:] + name_img + html[last_idx + len(tmp_type)::]
         first_idx = html.find("/p/img/", last_idx + 1)
 
-    #Верстка html-страницы
-    f = open(file_name + '.html', 'w', encoding='utf-8')
-    f.write(html)
-    f.close()
+##    #Верстка html-страницы
+##    f = open(file_name + '.html', 'w', encoding='utf-8') #FixMe: Ликвидировать, как пережиток прошлого
+##    f.write(html)
+##    f.close()
 
+
+    #Начало работы над тех-файлом
     f = open(file_name +'.tex', 'w', encoding='utf-8') 
     f.write("\n")
     f.write("\\input{Preambula.tex}\n\n" )
     f.write("\\newcommand\ProblemName{" + problem_name + "}\n\n")
-    f.write("\\newcommand\Source{" + str(url_name) + "}\n\n")
-    f.write("\\newcommand\Type{" + document_type + "}\n\n")
+    f.write("\\newcommand\Source{" + problem_source + "}\n\n")
+    f.write("\\newcommand\Type{" + problem_type + "}\n\n")
     f.write("\\input{Settings.tex}\n\n" )
 
     last_idx = 0
     first_idx = html.find('<p>', 0)#Обычный текст
     second_idx = html.find('<div class="card-body card-body-phors">', 0)#Блоки с условием на странице с решением
     third_idx = html.find('<tr>', 0)#Пункт разбалловки
+
     while first_idx >= 0 or second_idx >= 0 or third_idx >= 0:
         if first_idx >= 0 and (second_idx > first_idx or second_idx < 0) and (third_idx > first_idx or third_idx < 0):
             last_idx = html.find('</p>', first_idx)
@@ -317,13 +333,8 @@ url_num = input()
 url_num = str(url_num)
 print("Выберите, что нужно собрать: Условие (t), Решение (s), Разбалловка (m), Подсказка (h) или сразу все (a)")
 url_type = input()
-print('Введите источник задачи. Например, "Χ21-Τ6"')
-url_name = input()
-
-##for i in range(222, 223):
-##    url_num = str(i)
-##    url_type = "t"
-##    url_name = "T" + url_num
+#print('Введите источник задачи. Например, "Χ21-Τ6"')
+#url_name = input()
 
 if (not url_num.isdigit()) or not (url_type == 't' or url_type == 's' or url_type == 'm' or url_type == 'h' or url_type == 'a'):
     error()
@@ -331,13 +342,13 @@ else:
     url = 'https://pho.rs/p/'
     url = url + str(url_num)
     if url_type == "a":
-        compile_page(url, url_num, "", url_name)
-        compile_page(url + '/s', url_num, "-s", url_name)
-        compile_page(url + '/m', url_num, "-m", url_name)
-        compile_page(url + '/h', url_num, "-h", url_name)
+        compile_page(url, url_num, "")
+        compile_page(url + '/s', url_num, "-s")
+        compile_page(url + '/m', url_num, "-m")
+        compile_page(url + '/h', url_num, "-h")
     else:
         if url_type != "t":
               url = url + '/' + str(url_type)
               url_type = "-" + url_type
         else: url_type = ""
-        compile_page(url, url_num, url_type, url_name)
+        compile_page(url, url_num, url_type)
