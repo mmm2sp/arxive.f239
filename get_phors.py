@@ -7,7 +7,8 @@
 #You should have received a copy of the GNU General Public License along with Foobar. If not, see <https://www.gnu.org/licenses/>.
 
 import requests
-import os  
+import os
+import argparse
 
 def no_spaces(string):
     '''
@@ -197,7 +198,7 @@ def save(f, data):
                     #Картинка
                     data = insert_picture(f, data)
                     first_idx = data.find('<', 0)
-                    print(data)
+                    #FixMe: print(data)
                     if first_idx == -1:
                         data = no_spaces(data)
                         if data == "": return
@@ -206,7 +207,7 @@ def save(f, data):
                     
                     
                 
-def compile_page(url, url_num, url_type):
+def compile_page(url, url_num, url_type, problem_source, tex, pdf):
     #Дешифровка типа части задачи
     if url_type == "-s":
         problem_type = "Решение"
@@ -231,15 +232,16 @@ def compile_page(url, url_num, url_type):
         return
     problem_name = problem_name.replace("?", "")
 
-    #Считывание источника задачи
-    idx = html.find('<div class="d-flex justify-content-between">', 0)#Источник задачи
-    if idx == -1:
-        problem_source = "Τ"
-    else:
-        idx = html.find('</i>', idx)
-        last_idx = html.find('</a>', idx)
-        problem_source = html[idx + len('</i>'):last_idx]
-        problem_source = no_spaces(problem_source)
+    if problem_source == "":
+        #Считывание источника задачи
+        idx = html.find('<div class="d-flex justify-content-between">', 0)#Источник задачи
+        if idx == -1:
+            problem_source = "Τ"
+        else:
+            idx = html.find('</i>', idx)
+            last_idx = html.find('</a>', idx)
+            problem_source = html[idx + len('</i>'):last_idx]
+            problem_source = no_spaces(problem_source)
         
 
     file_name = problem_source + " " + problem_name + url_type
@@ -270,12 +272,6 @@ def compile_page(url, url_num, url_type):
         
         html = html[:first_idx:] + name_img + html[last_idx + len(tmp_type)::]
         first_idx = html.find("/p/img/", last_idx + 1)
-
-##    #Верстка html-страницы
-##    f = open(file_name + '.html', 'w', encoding='utf-8') #FixMe: Ликвидировать, как пережиток прошлого
-##    f.write(html)
-##    f.close()
-
 
     #Начало работы над тех-файлом
     f = open(file_name +'.tex', 'w', encoding='utf-8') 
@@ -319,22 +315,32 @@ def compile_page(url, url_num, url_type):
 
     f.write("\end{document}")
     f.close()
-    os.system('pdflatex "' + file_name + '.tex"')
-    os.system('pdflatex "' + file_name + '.tex"')
-    os.system('"' + file_name + '.pdf"')
 
-#############################
+    if tex:
+        os.system('pdflatex "' + file_name + '.tex"')
+        os.system('pdflatex "' + file_name + '.tex"')
+        if pdf:
+            os.system('"' + file_name + '.pdf"')
+    return
+
 
 def error():
     print("URL is incorrect")
-    
-print("Введите номер страницы на pho.rs")
-url_num = input()
-url_num = str(url_num)
-print("Выберите, что нужно собрать: Условие (t), Решение (s), Разбалловка (m), Подсказка (h) или сразу все (a)")
-url_type = input()
-#print('Введите источник задачи. Например, "Χ21-Τ6"')
-#url_name = input()
+
+#############################
+
+parser = argparse.ArgumentParser(description = 'Программа генерирует .tex и .pdf файлы с условиями / решениями задачи с сайта pho.rs')
+parser.add_argument('page', metavar='page_number', type=str,
+                    help='целое число, обозначающее номер страницы на сайте pho.rs. Например, если Вы хотите получить условие с pho.rs/p/504, нужно ввести 504')
+parser.add_argument('--type', default='t', choices=['t', 's', 'm', 'a'], help='часть задачи. Введите "t", чтобы собрать условие, "s" -- решение, "m" -- разбалловку и "a" -- все вышеперечисленное')
+parser.add_argument('--name', default='', help='источник задачи. Будет указан в начале названия файла для удобной сортировки. Если не указать, источник задачи будет определен автоматически при считывании с сайта')
+parser.add_argument ('-tex', action='store_const', const=True, help='Установите, если НЕ нужно компилировать tex-файл. Соответственно не будет создан pdf-файл')
+parser.add_argument ('-pdf', action='store_const', const=True, help='Установите, если НЕ нужно открывать готовый pdf-файл. Можно не указывать, если указан флаг "-tex"')
+
+args = parser.parse_args()
+
+url_num = str(args.page)
+url_type = args.type
 
 if (not url_num.isdigit()) or not (url_type == 't' or url_type == 's' or url_type == 'm' or url_type == 'h' or url_type == 'a'):
     error()
@@ -342,13 +348,13 @@ else:
     url = 'https://pho.rs/p/'
     url = url + str(url_num)
     if url_type == "a":
-        compile_page(url, url_num, "")
-        compile_page(url + '/s', url_num, "-s")
-        compile_page(url + '/m', url_num, "-m")
-        compile_page(url + '/h', url_num, "-h")
+        compile_page(url, url_num, "", problem_source = args.name, tex = not args.tex, pdf = not args.pdf)
+        compile_page(url + '/s', url_num, "-s", problem_sourcee = args.name, tex = not args.tex, pdf = not args.pdf)
+        compile_page(url + '/m', url_num, "-m", problem_source = args.name, tex = not args.tex, pdf = not args.pdf)
+        compile_page(url + '/h', url_num, "-h", problem_source = args.name, tex = not args.tex, pdf = not args.pdf)
     else:
         if url_type != "t":
               url = url + '/' + str(url_type)
               url_type = "-" + url_type
         else: url_type = ""
-        compile_page(url, url_num, url_type)
+        compile_page(url, url_num, url_type, problem_source = args.name, tex = not args.tex, pdf = not args.pdf)
