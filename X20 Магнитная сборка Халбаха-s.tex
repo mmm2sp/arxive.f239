@@ -1,0 +1,273 @@
+
+\input{Preambula.tex}
+
+\newcommand\ProblemName{Магнитная сборка Халбаха}
+
+\newcommand\Source{X20}
+
+\newcommand\Type{Решение}
+
+\input{Settings.tex}
+
+\QBlock{A1}{0.50}{Магнитное поле ослабляется с увеличением расстояния, для заданного угла $\theta$ найдите зависимость магнитного поля $B$ на расстоянии $r$ от диполя.}
+
+\QText{Зависимость магнитного поля диполя от $\vec r$:
+
+$\vec B (\vec r) = \frac {\mu_0}{4\pi} 
+(\frac{3\vec r (\vec m \cdot \vec r )} {r^5} - 
+\frac { \vec m} {r^3}),  
+\vec m \cdot \vec r = mr \cos \theta \Rightarrow$
+
+$\vec B (\vec r) = \frac {m \mu_0}{4\pi r^3}(3\cos \theta \hat{r} - \hat{y}) $
+
+Находить модуль этого вектора можно по-разному, например, 
+удобно ввести дополнительный единичный вектор:
+
+$\hat{\theta} = - \sin \theta \cdot \hat{y} + \cos \theta \cdot \hat{x}, \hat{r}=\cos \theta \cdot \hat{y} +\sin \theta \cdot \hat{x}$
+
+Или иначе:
+
+$\hat{y}=\cos\theta\cdot \hat{r} - \sin \theta \cdot \hat{\theta}, \hat{x}= \sin \theta \cdot \hat{r} + \cos \theta \cdot \hat{\theta}$}
+
+\QText{$3 \cos \theta \hat{r} - \hat{y} = 3 \cos \theta \hat{r} - (\cos \theta \cdot \hat{r} - \sin \theta \cdot \hat{\theta}) \Rightarrow$
+
+$\vec B (\vec r) = \frac {\mu_0 m} {4 \pi r^3} ((2 \cos \theta) \hat{r} + (\sin \theta) \hat{\theta}) \Rightarrow B = \frac {\mu_0 m}{4\pi r^3} \sqrt{(2\cos \theta)^2+(\sin \theta)^2)} $}
+
+\QBlock{B1}{1.50}{Выразите магнитное поле $B(y)$ вдоль оси, перпендикулярной магниту, на расстоянии $y$ от центра.}
+
+\QText{Для нахождения ответа в этом пункте, разобьём магнит на бесконечно узкие кольца и проинтегрируем:}
+
+\QText{Получаем слеующее выражение:
+
+$\vec B (y) = \frac {\mu_0} {4\pi} \cdot 
+\int ^R_0 2\pi x \cdot dx \cdot \sigma 
+\cdot \frac {1} {(x^2+y^2)^{\frac{3}{2}}}
+\cdot (2 \cos \theta \cdot \cos \theta
+\cdot \hat{y} + \sin \theta \cdot \sin \theta
+\cdot (-\hat{y}))$
+
+Для удобства перейдём к интегрированию по углу:
+
+$R = y \cdot \tan \theta_{max}, x=y\cdot 
+\tan \theta, dx=y\cdot \frac {d\theta}{\cos^2\theta}, \frac{y}{\cos\theta}=\sqrt{x^2+y^2}$
+
+Тогда
+
+$B=\frac {\mu_0 \sigma}{2} \cdot \int
+^{\theta_{max}}_0 y\cdot \tan \theta \cdot 
+y \cdot \frac {d\theta} {\cos^2\theta}
+\cdot \frac{\cos^3 \theta}{y^3}\cdot \hat{y} \cdot
+(2\cos^2\theta-\sin^2\theta)$
+
+$=\frac{\mu_0\sigma \cdot \hat{y}}{2y} \cdot 
+\int^{\theta_{max}}_0 d\theta \cdot 
+(2 \cos^2\theta \sin \theta - \sin^3 \theta)$
+
+$=\frac{\mu_0\sigma \cdot \hat{y}}{2y}
+\cdot \int^{\theta_{max}}_0 d
+\theta \cdot (3\cos^2 \theta \sin
+\theta - \sin \theta)$
+
+$=\frac{\mu_0\sigma\cdot \hat{y}}{2y}
+\cdot [-\cos^3\theta+\cos\theta]|^{
+\theta_{max}}_0=\frac{\mu_0\sigma
+\cdot \hat{y}}{2y}\cdot[\cos \theta_{max}-
+\cos^3 \theta_{max}]$
+
+$\cos \theta_{max} = \frac {y}
+{\sqrt{R^2+y^2}}$
+
+Упрощая, получаем итоговый результат:
+
+$B(y)=\frac{\mu_0\sigma}{2}\cdot
+\frac{R^2}{(R^2+y^2)^{\frac{3}{2}}}$}
+
+\QBlock{B2}{0.50}{Оцените величину магнитного поля  вблизи поверхности магнита. Ответ выразите через величины $t, D, \rho, \mu_0$.}
+
+\QText{Поскольку выполняется соотношение $t \ll D$, магнит можно считать плоским и пренебрегать его толщиной при нахождении поля у поверхности:
+
+$\sigma=\rho\cdot t, B(y)=\frac{
+\mu_0\sigma}{2}\cdot \frac {R^2}
+{(R^2+y^2)^{\frac{3}{2}}}, y=0 \Rightarrow B_0 = \frac {\mu_0\rho t} {D}$
+
+$\frac{\mu_0\rho t}{D}=0.13 \text{Тл}$}
+
+\QBlock{B3}{0.50}{Получите выражение и численное значение силы взаимодействия $F_0$ между дверью и прижатым к ней магнитом, также вычислите давление $P_0$ магнита на дверь.}
+
+\QText{B3) По условию, объемная плотность энергии магнитного поля составляет:
+
+$\frac{E}{V}=\frac {1}{2\mu_0}
+\cdot B^2$
+
+При отрыве магнита от двери на небольшое расстояние $y$:
+
+$\Delta E = \pi (D/2)^2\cdot y\cdot 
+\frac{1}{2\mu_0} \cdot B^2_0 $
+
+$F=\frac {\Delta E}{y} = \pi (D/2)^2
+\cdot \frac {1}{2\mu_0}\cdot B^2_0=
+2.2 H$
+
+Зная силу и площадь соприкосновения, легко выразить давление:
+
+$P=\frac{F}{S}=\frac{B^2_0}{2\mu_0}
+=6.9\cdot 10^3 \text{Па}$}
+
+\QBlock{C1}{2.00}{Запишите выражение для поля $\vec B(\vec r_0, y)$ которое создает ряд магнитов. (Для удобства поле выражается и через $\vec r_0$, и через $y$, хотя технически $y = (\vec r_0)_y$.)}
+
+\QText{По схеме ниже:}
+
+\QText{$r_0=\frac{y}{\cos \alpha}, x=y\tan \alpha, \vec{r_0} = y\hat{y} + x\hat{x} \Rightarrow
+r_0 = \hat{y}\cdot \cos \alpha +\hat{x} \cdot \sin \alpha$
+
+$\frac{r_0}{r}=\cos \theta, z=r_0
+\tan \theta \Rightarrow dz =\frac{r_0d\theta}
+{cos^2\theta}$
+
+$\vec r=x\hat{x}+y\hat{y}+(-z)\hat{z}$
+
+$\vec B(\vec{r_0},y)=\frac{\mu_0}{4
+\pi}\cdot \int^\infty_{-\infty}dz
+\cdot \rho_L\cdot[\frac{3}{r^4}
+(\frac{y\cdot \cos \theta}{r_0}) \cdot (\vec{r_0}-z\hat{z})-\frac{\hat{y}}{r^3}]=
+$
+
+$\frac{\mu_0\cdot\rho_L}{4\pi}\cdot
+\int^{\pi/2}_{-\pi/2}d\theta \cdot
+\frac{r_0}{\cos^2\theta}\cdot[
+\frac{3y}{r_0^5}\cdot \cos^5\theta
+\cdot \vec{r_0} - \frac {\hat{y}}{r_0^3}
+\cdot \cos^3\theta]=$
+
+$\frac{\mu_0\cdot\rho_L}{4\pi r_0^2}\cdot
+\int^{\pi/2}_{-\pi/2}d\theta\cdot[\frac{3y\cdot\vec{r_0}}{r_0^2}
+\cdot\cos^3\theta-\hat{y}\cdot\cos\theta]=$
+
+$\frac{\mu_0\cdot\rho_L}{4\pi r_0^2}\cdot
+[\frac{3y\cdot\vec{r_0}}{r_0^2}
+\cdot(\sin\theta-\frac{1}{3}\sin^3\theta)-
+\hat{y}\cdot\sin\theta]|_{-\pi/2}^{\pi/2}=$
+
+$\frac {\mu_0\cdot\rho_L}
+{4\pi r_0^2}\cdot[\frac{4y\cdot\vec{r_0}}{r_0^2}-2\hat{y}]$}
+
+\QBlock{C2}{1.00}{Найдите магнитного поля с двух сторон от сборки. Ответ дать в виде некоторого интеграла.}
+
+\QText{По схеме ниже:}
+
+\QText{$r_0=\frac{y_0}{\cos \alpha}=\frac{y}{\cos(
+\beta+\alpha)} \Rightarrow  y=y_0\cdot \frac
+{\cos(\beta+\alpha)}{\cos\alpha}$
+
+$\hat{y}=\cos \beta \cdot \hat{y_0} +\sin \beta \cdot \hat{x}, \hat{r_0}=\cos \alpha \cdot \hat{y_0} - \sin \alpha \cdot \hat{x}$
+
+$\vec B = \int_{-\infty}^{\infty} dx \cdot
+\frac {\mu_0\sigma}{4\pi y_0^2} \cdot \cos^2 \alpha \cdot [4\cos(\beta+\alpha)[\cos\alpha
+\cdot \hat{y_0}-\sin\alpha\cdot\hat{x}]-
+2[\cos \beta \cdot \hat{y_0}+\sin \beta \cdot
+\hat{x}] ]$
+
+Путём несложных математических преобразований получаем:
+
+$\frac{\mu_0\sigma}{2\pi y_0}\cdot \int 
+_{-\pi/2}^{\pi/2} d\alpha\cdot [\hat{y_0}\cdot
+\cos(\beta+2\alpha)-\hat{x}\cdot\sin(\beta+2
+\alpha)]$
+
+Подставим зависимость для $\beta$:
+
+$\beta=\beta_0+kx_0+ky_0\cdot\tan \alpha$
+
+Получаем:
+
+$\frac{\mu_0\sigma}{2\pi y_0}\cdot
+\int_{-\pi/2}^{\pi/2}d\alpha\cdot
+[\hat{y_0}\cdot\cos(\beta_0+kx_0+ky_0\cdot\tan\alpha
++2\alpha)-\hat{x}\cdot\sin(\beta_0+kx_0+ky_0\cdot\tan\alpha+2\alpha)]$}
+
+\QBlock{C3}{1.00}{Покажите, что с одной стороны идеальной сборки магнитное поле стремится к нулю.}
+
+\QText{Посмотрим внимательно на полученное выражение:
+
+$\cos(\beta_0+kx_0+ky_0\cdot\tan\alpha+2\alpha)$
+
+$=\cos(ky_0\cdot\tan\alpha+2\alpha)-\sin(\beta_0+kx_0)
+\sin(ky_0\cdot\tan\alpha+2\alpha)$
+
+$\cos(ky_0\cdot\tan\alpha+2\alpha)=\cos(ky_0\cdot\tan
+\alpha)\cos(2\alpha)-\sin(ky_0\cdot\tan\alpha)\sin
+(2\alpha)$
+
+По условию,
+
+$\int_{-\pi/2}^{\pi/2} dx\cdot\cos(2x)\cos(c\cdot
+\tan x)=\frac{c\cdot\pi}{e^c}=
+\int^{\pi/2}_{-\pi/2}dx\cdot\sin(2x)\cdot
+\sin(c\cdot\tan x)$
+
+Несложно заметить, что это и есть наш интеграл, если взять в качестве $c$ величину $ky_0$.}
+
+\QBlock{C4}{1.00}{Запишите выражение для поля с другой стороны.}
+
+\QText{При переходе к другой стороне сборки, некоторые знаки в уравнении меняются 
+на противоположные:
+
+$\vec{B}=-\frac{\mu_0\sigma}{2\pi y_0}
+\cdot \int^{\pi/2}_{-\pi/2} d\alpha
+\cdot [\hat{y_0}\cdot [\cos(\beta_0+kx_0)\cdot
+\cos(-ky_0\cdot\tan\alpha+2\alpha)-\sin"..."sin"..."]
+-\hat{x}\cdot[\sin(\beta_0+kx_0)\cos(-ky_0\cdot
+\tan\alpha+2\alpha)+\cos"..."sin"..."] ]$
+
+Интегралы от нечётных функций будут зануляться из-за
+соображений симметрии, чётные функции остаются.
+
+$\vec B=- \frac{\mu_0\sigma}{2\pi y_0} \cdot \int^{\pi/2}
+_{-\pi/2}d\alpha\cdot[\hat{y_0}\cdot[\cos(\beta_0+kx_0-ky_0
+\cdot\tan\alpha+2\alpha)]-\hat{x}\cdot[\sin(\beta_0+kx_0)
+\cos(-ky_0\cdot\tan\alpha+2\alpha)+\cos"..."\sin"..."] ]$
+
+$=-\frac{\mu_0\sigma}{2\pi y_0}\cdot\int
+^{\pi/2}_{-\pi/2}d\alpha\cdot[\hat{y_0}\cdot
+\cos(\beta_0+kx_0)\cdot(cos(2\alpha)\cos(ky_0
+\cdot\tan\alpha)+\sin"..."\sin"...")]-
+\hat{x}\cdot[\sin(\beta_0+kx_0)\cdot"..."] ]$
+
+$=-\frac{\mu_0\sigma}{2\pi y_0}\cdot
+[\hat{y_0}\cdot\cos(\beta_0+kx_0)-\hat{x}\cdot
+\sin(\beta_0+kx_0)]\cdot 2 \cdot\frac{ky_0\pi}
+{e^{ky_0}}$
+
+$=-\mu_0\sigma k\cdot e^{-ky_0}\cdot[\hat{y_0}
+\cdot\cos(\beta_0+kx_0)-\hat{x}\cdot \sin(\beta_0+kx_0)]$}
+
+\QBlock{C5}{1.50}{На основании выражения поля найдите среднее давление $Р$ такого магнита на дверь холодильника. Возьмите следующие параметры: толщина $t=0.5 \text{мм}$, объемная плотность магнитного диполя $\rho = 2 \cdot 10^5 \frac {\text{Тл} \cdot \text{м}} {\text{Гн}}$, шаг сборки $\lambda=5 \text{мм}$.}
+
+\QText{Сила и давление находятся так же, как и в пункте B3:
+
+$y_0 \rightarrow 0 \Rightarrow \vec B = 
+-\mu_0\sigma k \cdot[\hat{y_0}\cdot\cos(\beta_0+kx_0)
+-\hat{x}\cdot\sin(\beta_0+kx_0)] \Rightarrow$
+
+$B^2=(\mu_0\sigma k)^2, P=\frac{1}{2\mu_0}\cdot B^2,
+\sigma=\rho t \Rightarrow$
+
+$B=(1.257\cdot 10^{-6} \text{Гн/м})
+\cdot(2\cdot 10^5  \text{Тл}\cdot\text{м}/\text{Гн})
+\cdot(5\cdot10^{-4} \text{м})
+\cdot \frac{2\cdot 3.14}{5\cdot 10^{-3}\text{ м}}
+=0.16 \text{ Тл}$
+
+$P=\frac{1}{2\mu_0}\cdot B^2=\frac{1}
+{2\cdot 1.257 \cdot 10^{-6} \text{ Гн/м}}
+\cdot (0.16\text{ Тл}^2)=10\text{ кПа}$}
+
+\QBlock{C6}{0.50}{Найдите соотношение между давлением, которое создает магнитная сборка Халбаха и давлением, которое создает обычный магнит из того же материала, с теми же радиусом и толщиной. Здесь тоже следует пренебречь эффектами на периметре кружка и и толщиной магнита.}
+
+\QText{По формулам, полученным ранее: 
+
+$\eta=\frac{P}{P_0}=(\frac{B}{B_0})^2
+(\frac{\mu_0\rho tk}{\mu_0\rho t/2R})^2=
+(\frac{4\pi R}{\lambda})^2$}
+
+\end{document}
