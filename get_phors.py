@@ -10,34 +10,63 @@ import requests
 import os
 import argparse
 
-def change_html(data):
+def change_html(data, url_type):
     '''
+    Убирает лишние пробелы и переносы строк
     Позволяет обрабатывать перечисления и таблицы данных
     '''
     if data == "":
         return data
 
+    data = data.replace("\n", "")
+    data = data.replace("\r", "")
+    data = data.lstrip()#Убирает пробелы в начале строки
+    data = data.rstrip()#Убирает пробелы в конце строки
+
+    
     data = data.replace("<ul>", "<p> \\begin{itemize} \n")
     data = data.replace("</ul>", "\\end{itemize} </p> ")
     data = data.replace("<li>", "\\item ")
     data = data.replace("</li>", "\n")
 
-    #Обработка таблиц: определение числа столбцов
-    idx = data.find("<tbody>")
-    while idx != -1:
-        str_idx = data.find("<tr>", idx)
-        str_last_idx = data.find("</tr>", str_idx) 
-        col_num = data[str_idx:str_last_idx:].count("<td>")
-        table_type = "|"+"c|"*col_num
-        data = data[:idx:] + "<p> \\begin{table} \\centering \\begin{tabular}{"+table_type+"} \\hline \n" + data[idx + len("<tbody>")::]
+    if url_type != "-m": #Если разбалловка, то таблицы делать не будем. Проблемы с выключенными формулами,
+        #столбцами (см. закомментированное ниже) и т п
+        
+        #Обработка таблиц: определение числа столбцов
         idx = data.find("<tbody>")
+        while idx != -1:
+            str_idx = data.find("<tr>", idx)
+            str_last_idx = data.find("</tr>", str_idx) 
+            col_num = data[str_idx:str_last_idx:].count("</td>")
+            table_type = "|"+"c|"*col_num
+            data = data[:idx:] + "<p> \\begin{table} \\centering \\begin{tabular}{"+table_type+"} \\hline \n" + data[idx + len("<tbody>")::]
+            idx = data.find("<tbody>")
 
-    data = data.replace("</tbody>", "\\end{tabular} \\end{table} </p> ")
-    data = data.replace("<tr>", "")
-    data = data.replace("</tr>", '\\\ \n \\hline \n')
-    data = data.replace("</td><td>", " & ")
-    data = data.replace("<td>", "")
-    data = data.replace("</td>", "")
+        data = data.replace("</tbody>", "\\end{tabular} \\end{table} </p> ")
+
+    ##    first_idx = data.find("</td>")
+    ##    second_idx = data.find("<td", first_idx, len(data))
+    ##    while (second_idx != -1) and (data[first_idx:second_idx:].count("<tr>") == 0):
+    ##        last_idx = data.find(">", second_idx)
+    ##        data = data.replace(data[first_idx:last_idx+1:], " & ")
+    ##        first_idx = data.find("</td>")
+    ##        second_idx = data.find("<td", first_idx, len(data))
+    ##
+    ##    idx = data.find("<td")
+    ##    while idx != -1:
+    ##        last_idx = data.find(">", idx)
+    ##        data = data.replace(data[idx:last_idx+1:], "")
+    ##        idx = data.find("<td")
+    ##    data = data.replace("<tr>", "")
+    ##    data = data.replace("</tr>", '\\\ \n \\hline \n')
+    ##    data = data.replace("</td>", "")
+        data = data.replace("</tbody>", "\\end{tabular} \\end{table} </p> ")
+        data = data.replace("<tr>", "")
+        data = data.replace("</tr>", '\\\ \n \\hline \n')
+        data = data.replace("</td><td>", " & ")
+        data = data.replace("<td>", "")
+        data = data.replace("</td>", "")
+
 
     
     return data
@@ -45,6 +74,7 @@ def change_html(data):
 def no_spaces(string):
     '''
     Убирает лишние пробелы и переносы строк
+    Заменяет html команды на ТЕХовские
     '''
     if string == "":
         return string
@@ -362,7 +392,7 @@ def compile_page(url, url_num, url_type, problem_source, tex, pdf):
     f.write("\\input{Settings.tex}\n\n" )
 
 
-    html = change_html(html)
+    html = change_html(html, url_type)
 
     decipher_text(f, html)
 
