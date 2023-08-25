@@ -24,6 +24,7 @@ def change_html(data, url_type):
     data = data.rstrip()#Убирает пробелы в конце строки
 
     data = data.replace("<br />", "\n")
+    data = data.replace("<br>", "\n")
 
     #Распознование списков
     data = data.replace("<ul>", "<p> \\begin{itemize} \n")
@@ -212,10 +213,14 @@ def save_QBlock(f, data):
 
 
 def save(f, data):
-#Обработка вложенных <p></p>. Рекурсивно отбрасываем по одной паре
+    #Обработка вложенных <p></p>. Рекурсивно отбрасываем по одной паре
+    #Позволяет обрабатывать вложенные последовательно-параллельные конструкции вида:
+        #<p>
+        #    <p> ... </p><p> ... </p>
+        #</p>
     first_idx = data.find('<p>', 0)
     last_idx = data.find('</p>', first_idx)
-    while first_idx != -1:
+    if first_idx != -1:
         res = data[first_idx + len('<p>'):last_idx:]
         num_of_p = res.count('<p>')
         i = 0
@@ -223,101 +228,120 @@ def save(f, data):
             last_idx = data.find('</p>', last_idx + 1)
             res = data[first_idx + len('<p>'):last_idx:]
             num_of_p = res.count('<p>')
-            i = i + 1
-            
+            i = i + 1            
+        save(f, data[:first_idx:])    
         save(f, res) #Сохраняем кусочек внутренности
-        data = data[:first_idx:] + data[last_idx + len('</p>')::]
+        save(f, data[last_idx + len('</p>')::])
+        return
 
-        first_idx = data.find('<p>', 0)
-        last_idx = data.find('</p>', first_idx)
-
-    #Удаление неинформативного куска
-    data = clear_data(data, 'a')
-
-#Обработка случаев, когда в дате не только текст
-    
-    first_idx = max(data.find('</', 0), data.find('/>', 0))
-    
-    while first_idx != -1:
+    #В дате не осталось <p>...</p>
+    data = clear_data(data, 'a') #Удаление неинформативного куска
+   
+    if max(data.find('</'), data.find('/>'), data.find('<!')) == -1: #Если в дате только текст
+        data = no_spaces(data)
+        if data == "": return
+        f.write("\QText{" + data + "}")
+        f.write("\n\n")
+        
+    else: #Обработка случаев, когда в дате не только текст
         first_idx = data.find('<span class="label label-lg font-weight-normal label-rounded label-inline label-primary mr-2">', 0)
         #Если в дате есть "блок". Поидее должен быть отсеян ранее, но все возможно...
         if  first_idx != -1:
             save_QBlock(f, data)
-            first_idx = -1
         else:
-            first_idx = data.find('<span class="font-weight-boldest">', 0)
-            #Если в дате есть заголовок. Поидее кроме него ничего быть не должно
+            first_idx = data.find('<span class="font-weight-boldest">') #Если в дате есть заголовок. Поидее кроме него ничего быть не должно
             if first_idx != -1:
                 last_idx = data.find('</span>', first_idx)
                 chapter = data[first_idx + len('<span class="font-weight-boldest">'):last_idx:]
                 chapter = no_spaces(chapter)
                 f.write("\Chapter{" + chapter + "}\n\n")
-                first_idx = -1
             else:
-                first_idx = data.find('<span>Ответ:', 0)
-                #Если в дате есть блок с ответом
+                first_idx = data.find('<span>Ответ:') #Если в дате есть блок с ответом. 
                 if first_idx != -1:
                     last_idx = data.find('</span>', first_idx)
                     answer_block = data[first_idx + len('<span>Ответ:'):last_idx:]
                     answer_block = no_spaces(answer_block)
                     answer_block = insert_picture(f, answer_block)
+
+                    save(f, data[:first_idx:])
                     f.write("\ABlock{" + answer_block + "}\n\n")
-                    
-                    data = data[:first_idx:] + data[last_idx + len('</span>')::]
-                    first_idx = max(data.find('</', 0), data.find('/>', 0))
+                    save(f, data[last_idx + len('</span>')::])
                 else:
-                    #Картинка
-                    data = insert_picture(f, data)
-                    first_idx = -1 #FixMe: обработка картинок с подписями / просто текстом
-        
-#Если в дате только текст
-    if  max(data.find('</', 0), data.find('/>', 0)) == -1:
-        data = no_spaces(data)
-        if data == "": return
-        f.write("\QText{" + data + "}")
-        f.write("\n\n")
-
+                    first_idx = data.find('<tr>')
+                    if first_idx != -1:
+                        last_idx = data.find('</tr>', first_idx)
+                        save(f, data[:first_idx:])
+                        save_MScheme(f, data[first_idx + len('<tr>'): last_idx:])
+                        save(f, data[last_idx + len('</tr>')::])
+                    else:
+                        #Картинка
+                        data = insert_picture(f, data)
+                        first_idx = -1 #FixMe: обработка картинок с подписями / просто текстом
+    return
                     
-def decipher_text(f, html):
-    last_idx = 0
-    first_idx = html.find('<p>', 0)#Обычный текст
-    second_idx = html.find('<div class="card-body card-body-phors">', 0)#Блоки с условием на странице с решением
-    third_idx = html.find('<tr>', 0)#Пункт разбалловки
+def decipher_s(f, html):
+    first_idx = html.find('<div class="card-body card-body-phors">')#Блоки с условием на странице с решением
+    old_idx = first_idx + len('<div class="card-body card-body-phors">')
+    while first_idx != -1:
+        last_idx = html.find('<p></p>', first_idx)
+        if last_idx >= 0:
+            data = html[first_idx + len('<div class="card-body card-body-phors">'):last_idx + len('<p></p>'):]
+            save(f, html[old_idx:first_idx:])
+            save_QBlock(f, data)
 
-    while first_idx >= 0 or second_idx >= 0 or third_idx >= 0:
-        if first_idx >= 0 and (second_idx > first_idx or second_idx < 0) and (third_idx > first_idx or third_idx < 0):
-            last_idx = html.find('</p>', first_idx) # Первый найденный </p> после заданного <p>
-
-            #Позволяет обрабатывать вложенные последовательно-параллельные конструкции вида:
-            #<p>
-            #    <p> ... </p><p> ... </p>
-            #</p>
-            
-            data = html[first_idx + len('<p>'):last_idx:]
-            num_of_p = data.count('<p>')
-            i = 0
-            while i < num_of_p: #Если перед <\p> есть лишиние <p>
-                last_idx = html.find('</p>', last_idx + 1)
-                data = html[first_idx + len('<p>'):last_idx:]
-                num_of_p = data.count('<p>')
-                i = i + 1
-
-            save(f, data)
-            first_idx = html.find('<p>', last_idx)
+            old_idx = last_idx + len('<p></p>')
+            first_idx = html.find('<div class="card-body card-body-phors">', old_idx)
         else:
-            if second_idx >= 0 and (second_idx < first_idx or first_idx < 0) and (third_idx > second_idx or third_idx < 0):
-                last_idx = html.find('<p></p>', second_idx)
-                if last_idx >= 0:
-                    data = html[second_idx + len('<div class="card-body card-body-phors">'):last_idx + len('<p></p>'):]
-                    save_QBlock(f, data)
-                    second_idx = html.find('<div class="card-body card-body-phors">', last_idx)
-                else: second_idx = -1
-            else:
-                last_idx = html.find('</tr>', third_idx)
-                data = html[third_idx + len('<tr>'): last_idx:]
-                save_MScheme(f, data)
-                third_idx = html.find('<tr>', last_idx)                    
+            first_idx = -1
+            #Сюда не должно дойти
+            print("Error: file ended while scaning the end of Question Block. This block was not created")
+    save(f, html[old_idx::])
+                    
+def decipher_t(f, html):
+    first_idx = html.find('<p>')#Обычный текст
+    last_idx = html.rfind('</p>')#Обычный текст
+    save(f, html[first_idx:last_idx+len('</p>'):])
+       
 
+##def decipher_text(f, html): #Is not used
+##    last_idx = 0
+##    first_idx = html.find('<p>', 0)#Обычный текст
+##    second_idx = html.find('<div class="card-body card-body-phors">', 0)#Блоки с условием на странице с решением
+##    third_idx = html.find('<tr>', 0)#Пункт разбалловки
+##
+##    while first_idx >= 0 or second_idx >= 0 or third_idx >= 0:
+##        if first_idx >= 0 and (second_idx > first_idx or second_idx < 0) and (third_idx > first_idx or third_idx < 0):
+##            last_idx = html.find('</p>', first_idx) # Первый найденный </p> после заданного <p>
+##
+##            #Позволяет обрабатывать вложенные последовательно-параллельные конструкции вида:
+##            #<p>
+##            #    <p> ... </p><p> ... </p>
+##            #</p>
+##            
+##            data = html[first_idx + len('<p>'):last_idx:]
+##            num_of_p = data.count('<p>')
+##            i = 0
+##            while i < num_of_p: #Если перед <\p> есть лишиние <p>
+##                last_idx = html.find('</p>', last_idx + 1)
+##                data = html[first_idx + len('<p>'):last_idx:]
+##                num_of_p = data.count('<p>')
+##                i = i + 1
+##
+##            save(f, data)
+##            first_idx = html.find('<p>', last_idx)
+##        else:
+##            if second_idx >= 0 and (second_idx < first_idx or first_idx < 0) and (third_idx > second_idx or third_idx < 0):
+##                last_idx = html.find('<p></p>', second_idx)
+##                if last_idx >= 0:
+##                    data = html[second_idx + len('<div class="card-body card-body-phors">'):last_idx + len('<p></p>'):]
+##                    save_QBlock(f, data)
+##                    second_idx = html.find('<div class="card-body card-body-phors">', last_idx)
+##                else: second_idx = -1
+##            else:
+##                last_idx = html.find('</tr>', third_idx)
+##                data = html[third_idx + len('<tr>'): last_idx:]
+##                save_MScheme(f, data)
+##                third_idx = html.find('<tr>', last_idx)
                 
 def compile_page(url, url_num, url_type, problem_source, tex, pdf):
     #Дешифровка типа части задачи
@@ -397,7 +421,11 @@ def compile_page(url, url_num, url_type, problem_source, tex, pdf):
 
 
     html = change_html(html, url_type)
-    decipher_text(f, html) #Анализ html и запись преобразованной информации в ТЕХ-файл
+    
+    if url_type == "":
+        decipher_t(f, html) #Анализ html и запись преобразованной информации в ТЕХ-файл
+    else:
+        decipher_s(f, html) #Анализ html и запись преобразованной информации в ТЕХ-файл
 
     f.write("\end{document}")
     f.close()
