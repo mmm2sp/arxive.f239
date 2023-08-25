@@ -25,6 +25,11 @@ def change_html(data, url_type):
 
     data = data.replace("<br />", "\n")
     data = data.replace("<br>", "\n")
+    
+    data = data.replace("<strong>", "\\textbf{")
+    data = data.replace("</strong>", "}")
+    data = data.replace("<em>", "\\textit{")
+    data = data.replace("</em>", "}")
 
     #Распознование списков
     data = data.replace("<ul>", "<p> \\begin{itemize} \n")
@@ -36,13 +41,15 @@ def change_html(data, url_type):
         #столбцами (см. закомментированное ниже) и т п
         
         #Обработка таблиц: определение числа столбцов
+        idx_0 = data.find('<figure class="table">')
         idx = data.find("<tbody>")
         while idx != -1:
             str_idx = data.find("<tr>", idx)
             str_last_idx = data.find("</tr>", str_idx) 
             col_num = data[str_idx:str_last_idx:].count("</td>")
             table_type = "|"+"c|"*col_num
-            data = data[:idx:] + "<p> \\begin{table} \\centering \\begin{tabular}{"+table_type+"} \\hline \n" + data[idx + len("<tbody>")::]
+            data = data[:idx_0:] + "<p> \\begin{table}[h!] \\centering \\begin{tabular}{"+table_type+"} \\hline \n" + data[idx + len("<tbody>")::]
+            idx_0 = data.find('<figure class="table">')
             idx = data.find("<tbody>")
 
         data = data.replace("</tbody>", "\\end{tabular} \\end{table} </p> ")
@@ -101,6 +108,8 @@ def no_spaces(string):
     string = string.replace("&quot;", '"')
     string = string.replace("&nbsp;", ' ')
     string = string.replace("$,$", ", \,")
+
+
     
 
     #Костыль про patch-clamp
@@ -130,11 +139,14 @@ def insert_picture(f, data):
     pic_params = data[first_idx:last_idx:]
     pic_params = no_spaces(pic_params)
 
-    first_idx = data.find('<div class="kt-section__info"', last_idx)
+    first_idx = data.find('<div class=', last_idx)#"kt-section__info"', last_idx)
     if first_idx != -1:
         first_idx = data.find('>', first_idx) + 1
         last_idx = data.find('</div>', first_idx)
         pic_sub = data[first_idx:last_idx:]
+        if pic_sub.count('<div')>0:
+            pic_sub = ''
+        pic_sub = no_spaces(pic_sub)
     else:
         pic_sub = ''
     first_idx = data.find('<div class="col-md-8 latexinput" >', 0)
@@ -203,10 +215,10 @@ def save_QBlock(f, data):
         last_idx = last_idx_1
     else:
         last_idx = last_idx_2
-    #print(last_idx, " | ", last_idx_1, " ### ", last_idx_2)
-    if last_idx == -1: return
-    
-    block = data[first_idx + len('</span>'):last_idx:]
+    if last_idx == -1:
+        block = data[first_idx + len('</span>')::]
+    else:
+        block = data[first_idx + len('</span>'):last_idx:]
     block = no_spaces(block)
     
     f.write("\QBlock{" + name_str + "}{" + cost_str + "}{" + block + "}\n\n")
@@ -245,11 +257,11 @@ def save(f, data):
         
     else: #Обработка случаев, когда в дате не только текст
         first_idx = data.find('<span class="label label-lg font-weight-normal label-rounded label-inline label-primary mr-2">', 0)
-        #Если в дате есть "блок". Поидее должен быть отсеян ранее, но все возможно...
+        #Если в дате есть "блок". 
         if  first_idx != -1:
             save_QBlock(f, data)
         else:
-            first_idx = data.find('<span class="font-weight-boldest">') #Если в дате есть заголовок. Поидее кроме него ничего быть не должно
+            first_idx = data.find('<span class="font-weight-boldest">') #Если в дате есть заголовок. 
             if first_idx != -1:
                 last_idx = data.find('</span>', first_idx)
                 chapter = data[first_idx + len('<span class="font-weight-boldest">'):last_idx:]
