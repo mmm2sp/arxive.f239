@@ -224,9 +224,26 @@ def save(f, data):
             res = data[first_idx + len('<p>'):last_idx:]
             num_of_p = res.count('<p>')
             i = i + 1
-            
-        save(f, res) #Сохраняем кусочек внутренности
-        data = data[:first_idx:] + data[last_idx + len('</p>')::]
+
+#Обработка ответов
+        a_first_idx = data.find('<span>Ответ:', 0)
+        #Если в дате есть блок с ответом
+        if a_first_idx != -1:
+            a_last_idx = data.find('</span>', a_first_idx)
+            answer_block = data[a_first_idx + len('<span>Ответ:'):a_last_idx:]
+            answer_block = no_spaces(answer_block)
+            answer_block = insert_picture(f, answer_block)
+            if a_first_idx < first_idx:
+                f.write("\ABlock{" + answer_block + "}\n\n")
+                save(f, res) #Сохраняем кусочек внутренности
+                data = data[:a_first_idx:] + data[a_last_idx + len('</span>'):first_idx:] + data[last_idx + len('</p>')::]
+            else:
+                save(f, res) #Сохраняем кусочек внутренности
+                f.write("\ABlock{" + answer_block + "}\n\n")
+                data = data[:first_idx:] + data[last_idx + len('</p>'):a_first_idx:] + data[a_last_idx + len('</span>')::]
+        else:    
+            save(f, res) #Сохраняем кусочек внутренности
+            data = data[:first_idx:] + data[last_idx + len('</p>')::]
 
         first_idx = data.find('<p>', 0)
         last_idx = data.find('</p>', first_idx)
@@ -255,13 +272,16 @@ def save(f, data):
                 first_idx = -1
             else:
                 first_idx = data.find('<span>Ответ:', 0)
-                #Если в дате есть блок с ответом
+                #Если в дате есть блок с ответом. Поидее должен быть отсеян ранее, но все возможно...
                 if first_idx != -1:
                     last_idx = data.find('</span>', first_idx)
                     answer_block = data[first_idx + len('<span>Ответ:'):last_idx:]
                     answer_block = no_spaces(answer_block)
                     answer_block = insert_picture(f, answer_block)
                     f.write("\ABlock{" + answer_block + "}\n\n")
+                    #FixMe
+                    #print(answer_block)
+
                     
                     data = data[:first_idx:] + data[last_idx + len('</span>')::]
                     first_idx = max(data.find('</', 0), data.find('/>', 0))
