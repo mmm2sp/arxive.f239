@@ -53,8 +53,13 @@ $$}
 
 \QText{Величина $E_n$ обращается в ноль при угле $\theta_0$, равном:}
 
+\QText{Положительные ионы попадают на поверхность шара при $E_n{<}0$, а отрицательные - при $E_n{>}0$. Таким образом:}
+
 \ABlock{$$\theta_0=\arccos\left(-\cfrac{Q}{12\pi R^2\varepsilon_0E_0}\right){.}
 $$}
+
+\ABlock{Отрицательные ионы попадают на поверхность шара при $\theta\in[0{,}\theta_0]$;
+Положительные ионы попадают на поверхность шара при $\theta\in[\theta_0{,}\pi]$.}
 
 \QBlock{A5}{1.00}{Определите полную производную по времени заряда шара $dQ/dt$. Ответ выразите через $Q$, $E_0$, $\varepsilon_0$, $R$, $\sigma_+$, $\sigma_-$ и, если понадобится, $\theta_0$.}
 
@@ -84,6 +89,23 @@ $$}
 
 \QBlock{A6}{0.80}{Определите стационарный заряд шара $Q_0$, при котором он остаётся постоянным во времени. Ответ выразите через $E_0$, $\varepsilon_0$, $R$, $\sigma_+$ и $\sigma_-$.}
 
+\QText{В стационарном режиме $dQ/dt=0$, откуда имеем:
+$$-\cfrac{Q_0(\sigma_++\sigma_-)}{2\varepsilon_0}+(\sigma_+-\sigma_-)\left(3\pi R^2E_0\sin^2\theta_0-\cfrac{Q_0\cos\theta_0}{2\varepsilon_0}\right)=0{.}
+$$
+Подставляя $\theta_0$, получим:
+$$-\cfrac{Q_0(\sigma_++\sigma_-)}{2\varepsilon_0}+(\sigma_+-\sigma_-)\left(3\pi R^2E_0-\cfrac{Q^2_0}{48\pi\varepsilon^2_0R^2E_0}+\cfrac{Q^2_0}{24\pi\varepsilon^2_0R^2E_0}\right)=0{,}
+$$
+или же:
+$$Q^2_0-Q_0\cfrac{24\pi R^2\varepsilon_0E_0(\sigma_++\sigma_-)}{(\sigma_+-\sigma_-)}+144\pi^2R^4\varepsilon^2_0E^2_0=0{.}
+$$
+Для корней квадратного уравнения имеем:
+$$Q_0=\cfrac{12\pi R^2\varepsilon_0E_0}{\sigma_+-\sigma_-}\left(\sigma_++\sigma_-\pm\sqrt{(\sigma_++\sigma_-)^2-(\sigma_+-\sigma_-)^2}\right){,}
+$$
+или же:
+$$Q_0=\cfrac{12\pi R^2\varepsilon_0E_0(\sqrt{\sigma_+}\pm\sqrt{\sigma_-})^2}{\sigma_+-\sigma-}=12\pi R^2\varepsilon_0E_0\left(\cfrac{\sqrt{\sigma_+}+\sqrt{\sigma_-}}{\sqrt{\sigma_+}-\sqrt{\sigma_-}}\right)^{\pm1}{.}
+$$
+Учитывая, что $Q{<}12\pi R^2\varepsilon_0E_0$, выбираем корень со знаком минус:}
+
 \ABlock{$$Q_0=12\pi R^2\varepsilon_0E_0\left(\cfrac{\sqrt{\sigma_+}-\sqrt{\sigma_-}}{\sqrt{\sigma_+}+\sqrt{\sigma_-}}\right){.}
 $$}
 
@@ -107,8 +129,12 @@ $$\dot{Q}=-\cfrac{1}{2\varepsilon_0}\left(\sigma_++\sigma_-\left(\sqrt{\sigma_+}
 $$
 Таким образом:}
 
+\QText{Поскольку $A{<}0$:}
+
 \ABlock{$$A=-\cfrac{\sqrt{\sigma_+\sigma_-}}{\varepsilon_0}{.}
 $$}
+
+\ABlock{Значение заряда $Q_0$ является устойчивым.}
 
 \QBlock{A8}{0.30}{Получите зависимость отклонения заряда шара $\Delta{Q}$ от времени $t$. Ответ выразите через $\Delta{Q}_0$, $\varepsilon_0$, $\sigma_+$, $\sigma_-$ и $t$. Покажите также, что вид временной зависимости определяется только произведением $\sigma_+\sigma_-$.}
 
@@ -161,6 +187,9 @@ $$
 \ABlock{$$\vec{P}=\cfrac{\varepsilon_0\vec{E}_0}{A}{.}
 $$}
 
+\ABlock{$$\sigma_{max}=P{.}
+$$}
+
 \QBlock{B4}{0.40}{Выразите полную компоненту напряжённости электростатического поля $E_n$ на поверхности проводника через поверхностную плотность заряда $\sigma$ и $\varepsilon_0$.
 Определите максимальную величину напряжённости $E_{max}$ электростатического поля на поверхности эллипсоида. Ответ выразите через $E_0$ и $A$.}
 
@@ -197,6 +226,8 @@ $$}
 
 \ABlock{$$E_{max}=\left(\cfrac{a}{b}\right)^2\cfrac{E_0}{\ln\cfrac{2a}{b}-1}\approx 7{.}4\cdot 10^{12} \text{В}/\text{м}{.}
 $$}
+
+\ABlock{Величины $E_0$ достаточно для пробоя воздуха.}
 
 \QBlock{C1}{0.30}{Принимая потенциал шара равным потенциалу на поверхности Земли, т.е нулю, определите величину заряда $q_0$ шара. Ответ выразите через $\varepsilon_0$, $E_0$, $R_0$ и $h$.
 Влиянием электростатического поля шара на электростатическое поле Земли можно пренебречь. Влиянием электростатического поля зарядов, расположенных на проводе, можно пренебречь во всём пространстве.}
@@ -326,6 +357,9 @@ $$
 Подставляя выражение для $W$, находим:}
 
 \ABlock{$$\overline{W}=\cfrac{1}{2}\sqrt{\cfrac{M}{2m}}eE\lambda\approx 4{.}2\cdot 10^{-17} \text{Дж}{.}
+$$}
+
+\ABlock{$$u=\cfrac{1}{2}\sqrt{\cfrac{eE\lambda\sqrt{2}}{\sqrt{Mm}}}\approx 27{.}6 \text{км}/\text{с}{.}
 $$}
 
 \end{document}
