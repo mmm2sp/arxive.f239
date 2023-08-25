@@ -212,10 +212,14 @@ def save_QBlock(f, data):
 
 
 def save(f, data):
-#Обработка вложенных <p></p>. Рекурсивно отбрасываем по одной паре
+    #Обработка вложенных <p></p>. Рекурсивно отбрасываем по одной паре
+    #Позволяет обрабатывать вложенные последовательно-параллельные конструкции вида:
+        #<p>
+        #    <p> ... </p><p> ... </p>
+        #</p>
     first_idx = data.find('<p>', 0)
     last_idx = data.find('</p>', first_idx)
-    while first_idx != -1:
+    if first_idx != -1:
         res = data[first_idx + len('<p>'):last_idx:]
         num_of_p = res.count('<p>')
         i = 0
@@ -223,82 +227,59 @@ def save(f, data):
             last_idx = data.find('</p>', last_idx + 1)
             res = data[first_idx + len('<p>'):last_idx:]
             num_of_p = res.count('<p>')
-            i = i + 1
+            i = i + 1            
+        save(f, data[:first_idx:])    
+        save(f, res) #Сохраняем кусочек внутренности
+        save(f, data[last_idx + len('</p>')::])
+        return
 
-#Обработка ответов
-        a_first_idx = data.find('<span>Ответ:', 0)
-        #Если в дате есть блок с ответом
-        if a_first_idx != -1:
-            a_last_idx = data.find('</span>', a_first_idx)
-            answer_block = data[a_first_idx + len('<span>Ответ:'):a_last_idx:]
-            answer_block = no_spaces(answer_block)
-            answer_block = insert_picture(f, answer_block)
-            if a_first_idx < first_idx:
-                f.write("\ABlock{" + answer_block + "}\n\n")
-                save(f, res) #Сохраняем кусочек внутренности
-                data = data[:a_first_idx:] + data[a_last_idx + len('</span>'):first_idx:] + data[last_idx + len('</p>')::]
-            else:
-                save(f, res) #Сохраняем кусочек внутренности
-                f.write("\ABlock{" + answer_block + "}\n\n")
-                data = data[:first_idx:] + data[last_idx + len('</p>'):a_first_idx:] + data[a_last_idx + len('</span>')::]
-        else:    
-            save(f, res) #Сохраняем кусочек внутренности
-            data = data[:first_idx:] + data[last_idx + len('</p>')::]
-
-        first_idx = data.find('<p>', 0)
-        last_idx = data.find('</p>', first_idx)
-
-    #Удаление неинформативного куска
-    data = clear_data(data, 'a')
-
-#Обработка случаев, когда в дате не только текст
-    
-    first_idx = max(data.find('</', 0), data.find('/>', 0))
-    
-    while first_idx != -1:
+    #В дате не осталось <p>...</p>
+    data = clear_data(data, 'a') #Удаление неинформативного куска
+   
+    if max(data.find('</'), data.find('/>'), data.find('<!')) == -1: #Если в дате только текст
+        data = no_spaces(data)
+        if data == "": return
+        f.write("\QText{" + data + "}")
+        f.write("\n\n")
+        
+    else: #Обработка случаев, когда в дате не только текст
         first_idx = data.find('<span class="label label-lg font-weight-normal label-rounded label-inline label-primary mr-2">', 0)
         #Если в дате есть "блок". Поидее должен быть отсеян ранее, но все возможно...
         if  first_idx != -1:
             save_QBlock(f, data)
-            first_idx = -1
         else:
-            first_idx = data.find('<span class="font-weight-boldest">', 0)
-            #Если в дате есть заголовок. Поидее кроме него ничего быть не должно
+            first_idx = data.find('<span class="font-weight-boldest">') #Если в дате есть заголовок. Поидее кроме него ничего быть не должно
             if first_idx != -1:
                 last_idx = data.find('</span>', first_idx)
                 chapter = data[first_idx + len('<span class="font-weight-boldest">'):last_idx:]
                 chapter = no_spaces(chapter)
                 f.write("\Chapter{" + chapter + "}\n\n")
-                first_idx = -1
             else:
-                first_idx = data.find('<span>Ответ:', 0)
-                #Если в дате есть блок с ответом. Поидее должен быть отсеян ранее, но все возможно...
+                first_idx = data.find('<span>Ответ:') #Если в дате есть блок с ответом. 
                 if first_idx != -1:
                     last_idx = data.find('</span>', first_idx)
                     answer_block = data[first_idx + len('<span>Ответ:'):last_idx:]
                     answer_block = no_spaces(answer_block)
                     answer_block = insert_picture(f, answer_block)
+
+                    save(f, data[:first_idx:])
                     f.write("\ABlock{" + answer_block + "}\n\n")
-                    #FixMe
-                    #print(answer_block)
-
-                    
-                    data = data[:first_idx:] + data[last_idx + len('</span>')::]
-                    first_idx = max(data.find('</', 0), data.find('/>', 0))
+                    save(f, data[last_idx + len('</span>')::])
                 else:
-                    #Картинка
-                    data = insert_picture(f, data)
-                    first_idx = -1 #FixMe: обработка картинок с подписями / просто текстом
-        
-#Если в дате только текст
-    if  max(data.find('</', 0), data.find('/>', 0)) == -1:
-        data = no_spaces(data)
-        if data == "": return
-        f.write("\QText{" + data + "}")
-        f.write("\n\n")
-
+                    first_idx = data.find('<div class="card-body card-body-phors">')
+                    if first_idx != -1:
+                        last_idx = html.find('</tr>', first_idx)
+                        save(f, data[:first_idx:])
+                        save_MScheme(f, data[first_idx + len('<tr>'): last_idx:])
+                        save(f, data[last_idx + len('</tr>')::])
+                    else:
+                        #Картинка
+                        data = insert_picture(f, data)
+                        first_idx = -1 #FixMe: обработка картинок с подписями / просто текстом
+    return
                     
 def decipher_text(f, html):
+    #ПЕРЕДЕЛАТЬ!!!!
     last_idx = 0
     first_idx = html.find('<p>', 0)#Обычный текст
     second_idx = html.find('<div class="card-body card-body-phors">', 0)#Блоки с условием на странице с решением
