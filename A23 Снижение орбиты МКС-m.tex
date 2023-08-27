@@ -1,0 +1,323 @@
+
+\input{Preambula.tex}
+
+\newcommand\ProblemName{Снижение орбиты МКС}
+
+\newcommand\Source{A23}
+
+\newcommand\Type{Разбалловка}
+
+\input{Settings.tex}
+
+\QBlock{A1}{0.50}{Найдите зависимость давления $p_h$ от высоты $h$. Зависимость может содержать интегральное выражение. Это уравнение называется основной барометрической формулой.\textit{Подсказка}: считайте, что температура и ускорение свободного падения являются функциями $h$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Записано выражение для изменения давления воздуха
+$dp_h = -g_h(M/V)dh$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Получено дифференциальное уравнение
+$\frac{dp_h}{p_h} = -\frac{g_h \mu}{R T_h} dh$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Получена финальная формула
+$p_h = p_0 \exp \left(-\frac{\mu}{R} \int\limits_0^h \frac{g_h}{T_h}dh \right)$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{A2}{0.30}{Получите стандартную барометрическую формулу: зависимость давления от высоты $p_h^{sta}$, считая, что температура и ускорение свободного падения не зависят от $h$.
+
+Рассчитайте величину $h_0 = \frac{RT}{\mu g_0}$ при $T = 425 $К.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Получена стандартная барометрическая формула
+$p_h^{sta} = p_0 \exp \left(-\frac{h}{h_0} \right), \qquad h_0 = \frac{RT}{\mu g_0}$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Вычислено значение $h_0$
+$h_0 \approx 12.4 км$             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{A3}{0.60}{Получите уточнённую барометрическую формулу: зависимость давления от высоты $p_h^{imp}$, считая, что температура постоянна, а ускорение свободного падения зависит от высоты $h$.\textit{Подсказка}: для последнего используйте линейное приближение, считая $z_h = h/R_E \ll 1$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Получена зависимость $g_h$ в линейном приближении
+$g_h = g_0(1-2z_h)$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Посчитан интеграл
+$\int\limits_0^h g_h dh = g_0 h (1-z_h)$             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Получена улучшенная барометрическая формула
+$p_h^{imp} = p_0 \exp \left(-\frac{h(1-z_h)}{h_0} \right)$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{A4}{0.40}{Рассчитайте отношение значений давлений, вычисленных по стандартной и по уточнённой барометрическим формулам при $h = 4.0 \times 10^5 $м. Далее используйте уточнённую формулу.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Получено аналитическое выражение
+$\frac{p_h^{imp}}{p_h^{sta}} = \frac{\exp \left(-\frac{h(1-z_h)}{h_0} \right)}{ \exp \left(-\frac{h}{h_0} \right)} = e^{\frac{h^2}{h_0 R_E}}$             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Получен численный ответ
+$\frac{p_h^{imp}}{p_h^{sta}}  \approx 7.54$             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{A5}{0.20}{Найдите плотность воздуха $\rho_h$ и концентрацию нейтральных молекул воздуха $n_h$ на высоте $h$, используя линейное приближение.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Получена формула для плотности воздуха
+$\rho_h  = \rho_0 \exp \left(-\frac{h(1-z_h)}{h_0} \right)$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Получена формула для концентрации молекул воздуха
+$n_h = N_A \frac{\rho_0}{\mu} \exp \left(-\frac{h(1-z_h)}{h_0} \right)$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{B1}{0.50}{Найдите скорость станции $v_h$ и период обращения $\tau_h$, если станция движется по орбите высотой $h$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Получено выражение
+$g_h = \frac{v_h^2}{R_E (1+z_h)}, \quad где \quad g_h = \frac{g_0}{(1+z_h)^2}$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдена скорость станции $v_h$
+$v_h = \sqrt{\frac{g_0 R_E}{1+z_h}}$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найден период обращения станции $\tau_h$
+$\tau_h = 2\pi \frac{R_E+h}{v_h} = 2\pi \sqrt{\frac{R_E}{g_0}} (1+z_h)^{3/2}$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{B2}{0.50}{Найдите полную энергию $E_S$ станции, двигающейся по круговой орбите радиусом $R_E + h$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Получены выражения для кинетической и потенциальной энергий
+$E_{K} = \frac{M_S \cdot v_h^2}{2}, \qquad E_{P} = -M_S g_h R_E (1+z_h)$             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдена полная энергия станции
+$E_S = E_K + E_P = -\frac{M_S g_0 R_E}{2(1+z_h)}$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{B3}{1.00}{На станцию действует некоторая суммарная тормозящая сила $\vec{F}_{drag}$. В результате МКС замедляется, и высота её орбиты уменьшается на $dh$ за малое время $dt$. Запишите закон изменения энергии МКС, считая известным значение $F_{drag}$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Получено выражение для работы тормозящей силы
+$dA_{drag} = -F_{drag} \cdot v_h \cdot dt$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Получено выражение для изменения полной энергии
+$dE_S = +\frac{M_S g_0}{2(1+z_h)^2} dh$             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Записан закон изменения энергии
+$\frac{M_S g_0}{2(1+z_h)^2} dh = F_{drag} \cdot v_h \cdot dt$             &                                     0.50                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{B4}{0.50}{Найдите скорость снижения станции $u_h$.\textit{Подсказка}: скорость снижения зависит от силы трения, от высоты станции и от её массы.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Записано определение скорости снижения
+$u_h = \frac{dh}{dt}$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдена скорость снижения $u_h$
+$u_h = \frac{2 F_{drag}}{M_S g_0} v_h (1+z_h)^2 = \frac{2 F_{drag}}{M_S} \sqrt{\frac{R_E}{g_0}} (1+z_h)^{3/2}$             &                                     0.40                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{B5}{0.50}{Найдите изменение высоты $H_h$ станции за один оборот вокруг Земли и полное время $T_h$, за которое станция упадёт на поверхность Земли с начальной высоты $h$.\textit{Подсказка}: используйте соотношения $h_0 \ll h \ll R_E$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Найдено изменение высоты за один оборот $H_h$
+$H_h = u_h \tau_h = \frac{4 \pi R_E}{M_S g_0} F_{drag} \cdot (1+z_h)^3$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдено время падения станции
+$T_h = \frac{M_S}{2} \sqrt{\frac{g_0}{R_E}} \int\limits_0^h \frac{1}{F_{drag}(h) \cdot (1+z_h)^{3/2}} dh$
+Считая $F_{drag}(h) = const$:
+$T_h = \frac{M_S R_E}{F_{drag}} \sqrt{\frac{g_0}{R_E}} \left(1-\frac{1}{\sqrt{1+z_h}}\right) \approx \frac{M_S h}{2F_{drag}} \sqrt{\frac{g_0}{R_E}}$              &                                     0.40                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{C1}{0.50}{Найдите силу сопротивления воздуха $F_{air}$, скорость уменьшения высоты орбиты $u_h^{air}$ и изменение высоты за один оборот $H^{air}_h$ в этом случае.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Найдена сила сопротивления $F_{air}$
+$F_{air} = \rho_h \cdot v_h^2 \cdot S$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдена скорость снижения $u_h^{air}$
+$u_h^{air} = \frac{2 \rho_0 S \sqrt{g_0 R_E^3}}{M_S}(1+z_h)^{1/2} \cdot \exp \left(-\frac{h(1-z_h)}{h_0} \right)$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдено изменение высоты за один оборот $H_h^{air}$
+$H_h^{air} = u_h^{air} \tau_h = \frac{4 \pi S R_E^2}{M_S} \rho_0 \cdot (1+z_h)^2 \cdot \exp  \left(-\frac{h(1-z_h)}{h_0} \right)$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{C2}{0.50}{Найдите полное время $T_h^{air}$,  за которое станция упадёт на поверхность Земли с начальной высоты $h$ из-за сопротивления атмосферы.\textit{Подсказка}: используйте соотношения $h_0 \ll h \ll R_E$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Получено интегральное выражение для $T_h^{air}$
+$T_h^{air} = \frac{M_S}{2 \rho_0 S \sqrt{g_0 R_E^3}} \int\limits_0^h \left(1-\frac{h}{2R_E} \right) e^{h/h_0} dh$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Использовано приближение $h_0 \ll h \ll R_E$             &                                     0.10                        \\ 
+ \hline}
+
+\QText{Найдено время падения станции $T_h^{air}$}
+
+\QText{$T_h^{air} = \frac{M_S h_0}{2 \rho_0 S \sqrt{g_0 R_E^3}} \left(1-\frac{h}{2R_E} \right) \cdot e^{h/h_0}$}
+
+\QText{\textit{Другие возможные ответы:}}
+
+\QText{\begin{itemize} 
+\item Без приближений:
+$T_h^{air} = \frac{M_S h_0}{2 \rho_0 S \sqrt{g_0 R_E^3}} \left(1-\frac{h-h_0}{2R_E} \right) \cdot e^{h/h_0}$
+\item С учётом всех приближений:
+$T_h^{air} = \frac{M_S h_0}{2 \rho_0 S \sqrt{g_0 R_E^3}} \cdot e^{h/h_0}$
+\end{itemize}             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{D1}{0.30}{Найдите среднюю (за 24 часа) тормозящую силу $F_{ion}$, обусловленную столкновениями с этими частицами. Ночью ионизацией молекул можно пренебречь.
+
+Найдите также плотность ионизированных молекул кислорода $\rho_{ion}$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Найдена средняя тормозящая сила $F_{drag}$
+$F_{ion} = \frac{1}{2} \rho_{ion} \cdot S \cdot v_h^2$             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдена плотность ионизированных молекул кислорода $\rho_{ion}$
+$\rho_{ion} = \frac{\mu_{ion}}{N_A} \cdot n_{ion}$             &                                     0.10                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{D2}{0.70}{Найдите скорость уменьшения высоты орбиты станции $u_h^{ion}$, связанную со взаимодействием с ионами атомарного кислорода. Найдите также изменение высоты за один оборот $H_h^{ion}$ в этом случае.\textit{Подсказка}: используйте соотношения $h_0 \ll h \ll R_E$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Найдена скорость снижения $u_h^{ion}$
+$u_h^{ion} = \rho_{ion} \cdot \frac{S \sqrt{g_0 R_E^3}}{M_S}(1+z_h)^{1/2}$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдено изменение высоты за один оборот $H_h^{ion}$
+$H_h^{ion} = u_h^{ion} \tau_h = \frac{2 \pi S R_E^2 \rho_{ion}}{M_S}(1+z_h)^2$             &                                     0.40                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{E1}{0.60}{Оцените величину возникающего в проводящих частях станции тока $I_{ind}$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Найдено число электронов, попадающих на станцию за время $dt$
+$dN = n_{ion} \cdot v_h \cdot S \cdot dt$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдено выражение для тока $I_{ind}$
+$I_{ind} \approx e \frac{dN}{dt} = e \cdot S \cdot n_{ion} \cdot \sqrt{\frac{g_0 R_E}{1+z_h}}$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{E2}{0.60}{Получите приближённое выражение для тормозящей силы Ампера $F_{ind}$ в направлении, противоположном направлению движению станции.
+
+Пусть $\phi$ - угол между магнитным полем Земли $\vec{B}$, направленным вдоль меридианов, и скоростью МКС $\vec{v}$. Для простоты считайте, что длина станции $L$ равна корню квадратному из её площади $S$. Кроме того, вместо подсчёта среднего значения $\sin(\phi)$ вы можете аппроксимировать его значением $\sin(\pi/2 - \theta)$. Вы можете использовать дискретное число точек для подсчёта среднего значения.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Усреднение синуса угла между направлением магнитного поля и скоростью станции             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Записана формула для силы Ампера $F_{ind}$
+$F_{ind} = B \cdot I_{ind} \cdot L \cdot \langle \sin(\phi) \rangle$             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдено финальное выражение для силы Ампера $F_{ind}$
+$F_{ind} = \frac{1}{2} \cdot B \cdot I_{ind} \cdot \sqrt{S} = \frac{1}{2} \cdot e \cdot B \cdot S^{3/2} \cdot n_{ion} \cdot \sqrt{\frac{g_0 R_E}{1+z_h}} \\
+либо \\
+F_{ind} = \sin(\pi/2-\theta) \cdot B \cdot I_{ind} \cdot \sqrt{S} \approx 0.62 \cdot e \cdot B \cdot S^{3/2} \cdot n_{ion} \cdot \sqrt{\frac{g_0 R_E}{1+z_h}}$             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{E3}{0.80}{Найдите скорость снижения станции из-за её взаимодействия с магнитным полем Земли. Найдите также изменение высоты за один оборот $H_h^{ind}$ в этом случае.\textit{Подсказка}: используйте соотношение $h \ll R_E$.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline 
+                                                                                                                                                                                                                                         Найдена скорость снижения $u_h^{ind}$
+$u_h^{ind} \approx n_{ion} \frac{eBS^{3/2}R_E}{M_S}(1+z_h)$             &                                     0.30                        \\ 
+ \hline 
+                                                                                                                                                                                                                                                                                                                                     Найдено изменение высоты за один оборот $H_h^{ind}$
+$H_h^{ind} = u_h^{ind} \tau_h = \frac{2 \pi e B (S R_E)^{3/2}n_{ion}}{M_S \sqrt{g_0}}(1+z_h)^{5/2}$             &                                     0.50                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{F1}{0.40}{Рассчитайте необходимые величины и заполните Таблицу 1 в листе ответов.  \begin{tabular}{|c|c|c|c|c|c|c|} \hline 
+$h, км$ & $T_h^{air}, дней$ & $u_{air}, м/день$ & $u_{ion}, м/день$ & $u_{ind}, м/день$ & $\sum, м/день$ & $u_{ISS}, м/день$\\ 
+ \hline 
+350 &   &   &   &   &   &  \\ 
+ \hline 
+375 &   &   &   &   &   &  \\ 
+ \hline 
+400 &   &   &   &   &   &  \\ 
+ \hline 
+410 &   &   &   &   &   &  \\ 
+ \hline 
+\end{tabular} }
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline}
+
+\QText{Заполнена таблица}
+
+\QText{\begin{tabular}{|c|c|c|c|c|c|c|} \hline 
+$h, км$ & $T_h^{air}, дней$ & $u_{air}, м/день$ & $u_{ion}, м/день$ & $u_{ind}, м/день$ & $\sum, м/день$ & $u_{ISS}, м/день$\\ 
+ \hline 
+350 & 358 & 171 & 0.67 & 1.3 & 173 & $\sim 170$ [в 2008]\\ 
+ \hline 
+375 & 2688 & 28.7 & 0.67 & 1.3 & 30.7 & $-$\\ 
+ \hline 
+400 & 20181 & 4.9 & 0.67 & 1.3 & 6.9 & $\le 100$ [в 2021]\\ 
+ \hline 
+410 & 45205 & 2.4 & 0.67 & 1.3 & 4.4 & $\le 70$ [в 2022]\\ 
+ \hline 
+\end{tabular}}
+
+\QText{ }
+
+\QText{&                                     20 $\times$ 0.02                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{F2}{0.40}{Рассчитайте необходимые величины и заполните Таблицу 2 в листе ответов.  \begin{tabular}{|c|c|c|c|} \hline 
+$h, км$ & $H_h^{air}, м$ & $H_h^{ion}, м$ & $H_h^{ind}, м$\\ 
+ \hline 
+350 &   &   &  \\ 
+ \hline 
+375 &   &   &  \\ 
+ \hline 
+400 &   &   &  \\ 
+ \hline 
+410 &   &   &  \\ 
+ \hline 
+\end{tabular} }
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline}
+
+\QText{Значения $H_h^{air}$ на указанных высотах}
+
+\QText{\begin{tabular}{|c|c|c|c|} \hline 
+$h, км$ & $H_h^{air}, м$ & $H_h^{ion}, м$ & $H_h^{ind}, м$\\ 
+ \hline 
+350 & 10.6 & 0.04 & 0.08\\ 
+ \hline 
+375 & 1.8 & 0.04 & 0.08\\ 
+ \hline 
+400 & 0.31 & 0.04 & 0.08\\ 
+ \hline 
+410 & 0.15 & 0.04 & 0.08\\ 
+ \hline 
+\end{tabular}}
+
+\QText{&                                     4 $\times$ 0.10                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\QBlock{F3}{0.20}{МКС обращается по орбите на высотах выше 380 км. Расположите три рассмотренных эффекта торможения станции в порядке убывания их влияния.}
+
+\QText{\noindent \begin{tabular}{|p{0.9 \textwidth}|c|} \hline}
+
+\QText{Получен правильный ответ}
+
+\QText{\begin{itemize} 
+\item Сопротивление атмосферы
+\item Сила Ампера 
+\item Столкновения с ионизированными молекулами кислорода
+\end{itemize}             &                                     0.20                        \\ 
+ \hline 
+                                                                                                                                                                        \end{tabular}}
+
+\end{document}
