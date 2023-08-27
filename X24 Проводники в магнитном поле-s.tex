@@ -1,0 +1,381 @@
+
+\input{Preambula.tex}
+
+\newcommand\ProblemName{Проводники в магнитном поле}
+
+\newcommand\Source{X24}
+
+\newcommand\Type{Решение}
+
+\input{Settings.tex}
+
+\QBlock{A1}{0.60}{Пусть момент времени $t_0=0$ груз находится в начале координат, а проекция его скорости на ось $x$ равна $v_0$. Определите зависимости координаты $x(t)$ и скорости $v_x(t)$ груза от времени $t$. Ответ выразите через $v_0$, $\gamma$, $\omega_0$ и $t$.}
+
+\QText{Запишем уравнение движения груза:
+$$m\ddot{x}=-\beta\dot{x}-kx\Rightarrow \ddot{x}+\cfrac{\beta}{m}\dot{x}+\cfrac{k}{m}x=0{.}
+$$
+С учётом введённых обозначений:
+$$\ddot{x}+2\gamma\dot{x}+\omega^2_0x=0{.}
+$$
+Будем искать решение в комплексной форме: 
+$$x=Re\left\{Ae^{\lambda t}\right\}{,}
+$$
+где $A\neq 0$ и $\lambda$ - некоторые комплексные числа.
+Тогда:
+$$A\left(\lambda^2+2\gamma\lambda+\omega^2_0\right)=0\Rightarrow{\lambda=-\gamma\pm{i\sqrt{\omega^2_0-\gamma^2}}}{.}
+$$
+Решение представляет собой сумму решений, соответствующих разным значениям $\lambda$:
+$$x(t)=e^{-\gamma t}Re\left\{A_1e^{i\sqrt{\omega^2_0-\gamma^2}t}+A_2e^{-i\sqrt{\omega^2_0-\gamma^2}t}\right\}=Ce^{-\gamma t}\sin\left(\sqrt{\omega^2_0-\gamma^2}t+\varphi_0\right){,}
+$$
+где $C$ и $\varphi_0$ - действительные числа.
+Дифференцируя:
+$$v_x(t)=Ce^{-\gamma t}\left(\sqrt{\omega^2_0-\gamma^2}\cos\left(\sqrt{\omega^2_0-\gamma^2}t+\varphi_0\right)-\gamma\sin\left(\sqrt{\omega^2_0-\gamma^2}t+\varphi_0\right)\right){.}
+$$
+Для момента времени $t=0$ имеем:
+$$\begin{cases}
+x(0)=C\sin\varphi_0\\
+v_x(0)=C\left(\sqrt{\omega^2_0-\gamma^2}\cos\varphi_0-\gamma\sin\varphi_0\right)
+\end{cases}
+$$
+С учётом начальных условий:
+$$\begin{cases}
+x(0)=0\\
+v_x(0)=v_0
+\end{cases}
+\Rightarrow
+\begin{cases}
+\varphi_0=0\\
+C=\cfrac{v_0}{\sqrt{\omega^2_0-\gamma^2}}
+\end{cases}
+$$
+Окончательно получим:}
+
+\ABlock{$$x(t)=\cfrac{v_0}{\sqrt{\omega^2_0-\gamma^2}}e^{-\gamma t}\sin\left(\sqrt{\omega^2_0-\gamma^2}t\right){.}
+$$}
+
+\ABlock{$$v_x(t)=\cfrac{v_0\omega_0}{\sqrt{\omega^2_0-\gamma^2}}e^{-\gamma t}\cos\left(\sqrt{\omega^2_0-\gamma^2}t+\arcsin\cfrac{\gamma}{\omega_0}\right){.}
+$$}
+
+\QBlock{A2}{0.40}{Получите точное выражение для $Q$. Ответ выразите через $\omega_0$ и $\gamma$.}
+
+\QText{Перепишем выражение для добротности в следующем виде:
+$$Q=\cfrac{2\pi}{1-\left(\cfrac{v_1}{v_0}\right)^2}{,}
+$$
+где $v_1$ - проекция скорости груза при повторном прохождении начала координат с тем же направлением скорости.
+Величина скорости $v_1$ достигается через период $T$, равный:
+$$T=\cfrac{2\pi}{\sqrt{\omega^2_0-\gamma^2}}{.}
+$$
+Тогда:
+$$\cfrac{v_1}{v_0}=e^{-\gamma T}=e^{-2\pi\gamma/\sqrt{\omega^2_0-\gamma^2}}{,}
+$$
+откуда получим:}
+
+\ABlock{$$Q=\cfrac{2\pi}{1-e^{-4\pi\gamma/\sqrt{\omega^2_0-\gamma^2}}}{.}
+$$}
+
+\QBlock{A3}{0.20}{Получите приближённое выражение для добротности $Q$ при слабом затухании ($\gamma\ll\omega_0$).
+Ответ выразите через $m$, $k$ и $\beta$.}
+
+\QText{Разложение знаменателя при $\gamma\ll{\omega_0}$ следующее:
+$$1-e^{-4\pi\gamma/\sqrt{\omega^2_0-\gamma^2}}\approx 1-e^{-4\pi\gamma/\omega_0}\approx 1-\left(1-\cfrac{4\pi\gamma}{\omega_0}\right)=\cfrac{4\pi\gamma}{\omega_0}{,}
+$$
+откуда получим приближение для добротности при слабом затухании $Q$:
+$$Q\approx\cfrac{\omega_0}{2\gamma}{.}
+$$
+Подставляя $\omega_0$ и $\gamma$, получим:}
+
+\ABlock{$$Q\approx\cfrac{\sqrt{mk}}{\beta(H)}{.}
+$$}
+
+\QBlock{B1}{0.60}{Отклонение $x$ груза от положения зависит от времени $t$ следующим образом:
+$$x(t)=A\sin\left(\Omega t+\varphi_0\right)
+$$
+Найдите $A$ и $\varphi_0$. Ответы выразите через $A_0$, $\Omega$, $\omega_0$ и $\gamma$.}
+
+\QText{Уравнение движения следующее:
+$$m\ddot{x}=k(A_0\sin\Omega t-x)-\beta\dot{x}{,}
+$$
+откуда:
+$$\ddot{x}+2\gamma\dot{x}+\omega^2_0\Delta{x}=\omega^2_0A_0\sin\Omega t{.}
+$$
+Будем искать решение в виде:
+$$x=Re\left\{\hat{A}e^{i\Omega t}\right\}{,}
+$$
+где $\hat{A}\neq 0$ - некоторое комплексное число.
+Тогда:
+$$\hat{A}\left((\omega^2_0-\Omega^2)+2i\Omega\gamma\right)=\omega^2_0A_0e^{-i\pi/2}{.}
+$$
+Выразим $A$:
+$$\hat{A}=\cfrac{\omega^2_0A_0\left((\omega^2_0-\Omega^2)-2i\Omega\gamma\right)e^{-i\pi/2}}{\left((\omega^2_0-\Omega^2)^2+4\gamma^2\Omega^2\right)}=\cfrac{A_0\omega^2_0e^{-i(\pi/2-\varphi)}}{\sqrt{(\omega^2_0-\Omega^2)^2+4\gamma^2\omega^2_0}}{,}
+$$
+где $\varphi$ - аргумент комплексного числа $z=(\omega^2_0-\Omega^2)-2i\Omega\gamma$.
+Извлекая действительную часть, найдём:
+$$\Delta{x}(t)=\cfrac{A_0\omega^2_0}{\sqrt{(\omega^2_0-\Omega^2)^2+4\gamma^2\Omega^2}}\sin\left(\Omega t+\varphi\right){.}
+$$
+Таким образом:
+$$A=\cfrac{A_0\omega^2_0}{\sqrt{(\omega^2_0-\Omega^2)^2+4\gamma^2\Omega^2}}\qquad \varphi_0=\varphi{.}
+$$
+При определении $\varphi$ есть три случая:
+$$\varphi=\begin{cases}
+-\arctan\cfrac{2\gamma\Omega}{\omega^2_0-\Omega^2}\quad\text{при}\quad \Omega{<}\omega_0\\
+-\cfrac{\pi}{2}\quad\text{при}\quad \Omega=\omega_0\\
+-\pi-\arctan\cfrac{2\gamma\Omega}{\omega^2_0-\Omega^2}\quad\text{при}\quad \Omega{>}\omega_0
+\end{cases}
+$$
+Таким образом:}
+
+\ABlock{$$A=\cfrac{A_0\omega^2_0}{\sqrt{(\omega^2_0-\Omega^2)^2+4\gamma^2\Omega^2}}{.}
+$$
+$$\varphi_0=\begin{cases}
+-\arctan\cfrac{2\gamma\Omega}{\omega^2_0-\Omega^2}\quad\text{при}\quad \Omega{<}\omega_0\\
+-\cfrac{\pi}{2}\quad\text{при}\quad \Omega=\omega_0\\
+-\pi-\arctan\cfrac{2\gamma\Omega}{\omega^2_0-\Omega^2}\quad\text{при}\quad \Omega{>}\omega_0
+\end{cases}
+$$}
+
+\QBlock{B2}{0.30}{Получите точные выражения для резонансной циклической частоты $\Omega_\text{рез}$ и соответствующей ей амплитуды колебаний $A_\text{рез}$. Ответы выразите через $\omega_0$, $\gamma$ и $A_0$. Считайте, что $\gamma\sqrt{2}{<}\omega_0$.}
+
+\QText{Дифференцируя знаменатель по $\Omega^2$, получим:
+$$-2(\omega^2_0-\Omega^2)+4\gamma^2=0{,}
+$$
+откуда:}
+
+\ABlock{$$\Omega_\text{рез}=\sqrt{\omega^2_0-2\gamma^2}{.}
+$$}
+
+\QText{Подставляя $\Omega_\text{рез}$ в выражение для $A$, находим:}
+
+\ABlock{$$A_\text{рез}=\cfrac{A_0\omega^2_0}{2\gamma\sqrt{\omega^2_0-\gamma^2}}{.}
+$$}
+
+\QBlock{B3}{0.30}{Получите приближённые выражения для $\Omega_\text{рез}$, $A_\text{рез}$ и $\Delta{\omega}$ при слабом затухании ($\gamma\ll{\omega_0}$).
+Ответы выразите через $A_0$, $\omega_0$ и $\gamma$.}
+
+\QText{Упрощённые выражения для $\Omega_\text{рез}$ и $A_\text{рез}$ получаются тривиально и принимают следующий вид:}
+
+\ABlock{$$\Omega_\text{рез}\approx{\omega_0}\qquad A_\text{рез}\approx{\cfrac{A_0\omega_0}{2\gamma}}{.}
+$$}
+
+\QText{Рассмотрим циклическую частоту $\Omega=\Omega_\text{рез}+\Delta\Omega$, где $\Delta\Omega\ll\Omega_\text{рез}$. 
+Величину $\Omega_\text{рез}$ можно считать равной $\omega_0$, поскольку:
+$$\Omega_\text{рез}=\sqrt{\omega^2_0-2\gamma^2}\approx \omega_0-\cfrac{\gamma^2}{\omega_0}{.}
+$$
+Отклонение $\Omega_\text{рез}$ от $\omega_0$ представляет собой величину второго порядка малости.
+Тогда для подкоренного выражения получим:
+$$\left(\omega^2_0-\Omega^2\right)^2+4\gamma^2\Omega^2\approx \left(\omega^2_0-\left(\omega_0+\Delta\Omega\right)\right)^2+4\gamma^2\left(\omega_0+\Delta\Omega\right)^2\approx 4\omega^2_0\Delta\Omega^2+4\gamma^2\omega^2_0{.}
+$$
+Величина $\Delta{\Omega}$ такова, что подкоренное выражение вдвое больше соответствующего резонансу. Отсюда:
+$$4\Delta{\Omega}^2\omega^2_0+4\gamma^2\omega^2_0=8\gamma^2\omega^2_0\Rightarrow \Delta{\Omega}_{1{,}2}=\pm\gamma{.}
+$$
+Поскольку $\Delta\omega=\Delta\Omega_1-\Delta\Omega_2$, получим:}
+
+\ABlock{$$\Delta{\omega}=2\gamma{.}
+$$}
+
+\QBlock{C1}{0.30}{Найдите индукцию $B_x$ магнитного поля кольца на его оси в точке с координатой $x$.
+Ответ выразите через $x$, $R$, $I$ и магнитную постоянную $\mu_0$.}
+
+\QText{Из закона Био-Савара-Лапласа:
+$$d\vec{B}=\cfrac{\mu_0}{4\pi}\cfrac{\left[\vec{r}\times d\vec{r}\right]}{r^3}{,}
+$$
+где $\vec{r}$ - радиус-вектор элемента кольца относительно точки с координатой $x$.
+Для каждой точки кольца:
+$$r=\sqrt{R^2+x^2}{.}
+$$
+Интеграл по контуру от векторного произведения получим из его геометрического смысла:
+$$\oint_L\left[\vec{r}\times d\vec{r}\right]=2\vec{S}=2\pi{R}^2\vec{e}_x{,}
+$$
+откуда:}
+
+\ABlock{$$B_x(x)=\cfrac{\mu_0IR^2}{2\left(R^2+x^2\right)^{3/2}}{.}
+$$}
+
+\QBlock{C2}{1.00}{Определите магнитный момент $\vec{m}$ диска.
+Ответ выразите через $\vec{e}_x$, $r_0$, $h$, $\rho$ и $\dot{B}$.}
+
+\QText{Из закона электромагнитной индукции Фарадея получим:
+$$\mathcal{E}_\text{инд}=-\cfrac{d\Phi}{dt}=-\pi{r}^2\dot{B}=2\pi rE_\text{вихр}{,}
+$$
+откуда:
+$$E_\text{вихр}=-\cfrac{\dot{B}r}{2}{.}
+$$
+Из закона Ома в дифференциальной форме:
+$$\vec{j}=\cfrac{\vec{E}}{\rho}{,}
+$$
+откуда:
+$$j(r)=-\cfrac{\dot{B}r}{2\rho}{.}
+$$
+Момент кольцевого тока высотой $h$ и толщиной $dr$ равен:
+$$dm_x=\pi{r}^2dI=\pi{r}^2jhdr=-\cfrac{\pi\dot{B}h}{2\rho}r^3dr{,}
+$$
+откуда:
+$$m_x=-\cfrac{\pi\dot{B}h}{2\rho}\int\limits_0^{r_0}r^3dr{.}
+$$
+Интегрируя, находим:}
+
+\ABlock{$$\vec{m}=-\vec{e}_x\cdot{\cfrac{\pi{r}^4_0h\dot{B}}{8\rho}}{.}
+$$}
+
+\QBlock{C3}{0.50}{Определите магнитный момент $\vec{m}$ шара.
+Ответ выразите через $\vec{e}_x$, $R_0$, $\rho$ и $\dot{B}$.}
+
+\QText{Воспользуемся сферическими координатами (т.е будем отсчитывать угол $\theta$ от положительного направления оси $x$). Тогда для $r_0$ и $h$ имеем:
+$$r_0=R_0\sin\theta\qquad h=d(R_0(1-\cos\theta))=R_0\sin\theta d\theta{.}
+$$
+Тогда для элемента магнитного момента шара имеем:
+$$dm_x=-\cfrac{\pi{R}^5_0\dot{B}}{8\rho}\sin^5\theta d\theta{,}
+$$
+откуда:
+$$m_x=-\cfrac{\pi{R}^5_0\dot{B}}{8\rho}\int\limits_{0}^{\pi}\sin^5\theta d\theta{.}
+$$
+Проинтегрируем полученное выражение с помощью подстановки $x=\cos\theta$:
+$$\int\limits_{0}^{\pi}\sin^5\theta d\theta=\int\limits_{-1}^{1}(1-x^2)^2dx=\int\limits_{-1}^{1}(1-2x^2+x^4)dx=\left(x-\cfrac{2x^3}{3}+\cfrac{x^5}{5}\right)\Biggl|_{-1}^{1}=\cfrac{16}{15}{,}
+$$
+откуда:}
+
+\ABlock{$$\vec{m}=-\vec{e}_x\cdot\cfrac{2\pi{R}^5_0\dot{B}}{15\rho}{.}
+$$}
+
+\QBlock{C4}{0.40}{Получите производную по времени индукции магнитного поля кольца в центре шара $dB_x/dt$, эквивалентную величине $\dot{B}$.
+Ответ выразите через $v$, $I$, $R$, $x$ и магнитную постоянную $\mu_0$.}
+
+\QText{При движении шара индукция магнитного поля $B_x(x)=B_x(x(t))$, т.е является сложной функцией времени, поэтому имеем:
+$$\dot{B_x}=\cfrac{dB_x}{dt}=\cfrac{dB_x}{dx}\cfrac{dx}{dt}=v\cfrac{dB_x}{dx}
+$$
+Найдём производную $dB_x/dx$:
+$$\cfrac{dB_x}{dx}=-\cfrac{3\mu_0IR^2x}{2(R^2+x^2)^{\frac{5}{2}}}{,}
+$$
+откуда:}
+
+\ABlock{$$\dot{B}=-\cfrac{3\mu_0IR^2xv}{2(R^2+x^2)^{\frac{5}{2}}}{.}
+$$}
+
+\QBlock{C5}{0.50}{Найдите коэффициент пропорциональности $\beta(x)$.
+Ответ выразите через $I$, $R$, $x$, $R_0$, $\rho$ и магнитную постоянную $\mu_0$.}
+
+\QText{Поскольку шар движется вдоль оси $x$:
+$$\vec{F}=m_x\cdot\cfrac{\partial\vec{B}}{\partial x}=\vec{e}_x\cdot m_x\cfrac{dB_x}{dx}{.}
+$$
+Для магнитного момента $m_x$ имеем:
+$$m_x=-\cfrac{2\pi{R}^5_0v}{15\rho}\cdot\cfrac{dB_x}{dx}{,}
+$$
+откуда:
+$$F_x=-\cfrac{2\pi{R}^5_0}{15\rho}\left(\cfrac{dB_x}{dx}\right)^2v{.}
+$$
+Подставляя $dB_x/dx$, находим:}
+
+\ABlock{$$\beta(x)=\cfrac{3\pi\mu^2_0I^2R^4R^5_0x^2}{10\rho(R^2+x^2)^5}{.}
+$$}
+
+\QBlock{C6}{0.80}{Определите удельное сопротивление $\rho$ шара, используемого в первом эксперименте.
+Ответ выразите через $m$, $k$, $R_0$, $R$, $H$, $I$ и магнитную постоянную $\mu_0$.}
+
+\QText{Первый пик достигается при значении $\Delta{x}\approx{47 \text{у.е}}$, а 12-ый - при $\Delta{x}\approx{6 \text{у.е}}$.
+Отсюда:
+$$\cfrac{\gamma}{\sqrt{\omega^2_0-\gamma^2}}\approx{\cfrac{\ln\left(\cfrac{47}{6}\right)}{11\cdot{2\pi}}}\approx{0{,}0297}\Rightarrow \cfrac{\gamma}{\omega_0}\approx 0{.}03\ll{1}{.}
+$$
+При этом имеем:
+$$\cfrac{\omega_0}{2\gamma}=\cfrac{\sqrt{mk}}{\beta(H)}{,}
+$$
+откуда:
+$$\beta(H)\approx{\cfrac{2\gamma\sqrt{mk}}{\omega_0}}{,}
+$$
+и окончательно}
+
+\ABlock{$$\rho=15{.}7\cdot\cfrac{\mu^2_0I^2R^5_0R^4H^2}{\sqrt{mk}(R^2+H^2)^5}
+$$}
+
+\QBlock{C7}{0.70}{Определите удельное сопротивление $\rho$ шара, используемого во втором эксперименте.
+Ответ выразите через $m$, $k$, $R_0$, $R$, $H$, $I$ и магнитную постоянную $\mu_0$.}
+
+\QText{Из выражения для резонансной амплитуды найдём:
+$$Q=\cfrac{A_\text{рез}}{A_0}=\cfrac{\sqrt{mk}}{\beta(H)}\approx 25
+$$
+откуда окончательно:}
+
+\ABlock{$$\rho=23{.}6\cfrac{\mu^2_0I^2R^5_0R^4H^2}{\sqrt{mk}(R^2+H^2)^5}
+$$}
+
+\QBlock{D1}{0.60}{Определите индукцию $B_z$ магнитного поля соленоида, а также её производную $dB_z/dz$ в точке с координатой $z$. Ответ выразите через $\mu_0$, $n$, $I$, $R$ и $z$.}
+
+\QText{Из теоремы о телесном угле для магнитного поля имеем:
+$$B_z=\cfrac{\mu_0i\Omega_\text{бок}}{4\pi}{,}
+$$
+где $i=In$ - линейная плотность токов соленоида, а $\Omega_\text{бок}$ - телесный угол, под которым видна его боковая поверхность.
+Телесный угол, под которым видна боковая поверхность соленоида, равен телесному углу, под которым видно его основание из точки с координатой $z$, поэтому имеем:
+$$\Omega_\text{бок}=2\pi(1-\cos\alpha)=2\pi\left(1-\cfrac{z}{\sqrt{z^2+R^2}}\right){.}
+$$
+Таким образом:}
+
+\ABlock{$$B_z=\cfrac{\mu_0nI}{2}\left(1-\cfrac{z}{\sqrt{z^2+R^2}}\right){.}
+$$}
+
+\QText{Дифференцируя, находим:}
+
+\ABlock{$$\cfrac{dB_z}{dz}=-\cfrac{\mu_0nIR^2}{2(R^2+z^2)^{3/2}}{.}
+$$}
+
+\QBlock{D2}{1.00}{Определите линейную плотность тока $i$ на поверхности цилиндра в точке с координатой $z$. Ответ выразите через $\mu_0$, $x$ и $dB_z(z)/dz$.}
+
+\QText{Поскольку снаружи цилиндра индукцию магнитного поля можно считать равной индукции магнитного поля соленоида, имеем:
+$$B_{z(in)}=B_z(z-x)\qquad B_{z(out)}=B(z){.}
+$$
+Из теоремы о циркуляции для индукции магнитного поля получим:
+$$(B_{z(in)}-B_{z(out)})\approx -x\cfrac{dB_z}{dz}=\mu_0ix{,}
+$$
+откуда:}
+
+\ABlock{$$i(z)=-\cfrac{x}{\mu_0}\cfrac{dB_z}{dz}{.}
+$$}
+
+\QBlock{D3}{1.50}{Определите силу $F_x$, действующую на цилиндр со стороны магнитного поля соленоида. Ответ выразите через $\mu_0$, $r$, $R$, $n$, $I$ и $x$.}
+
+\QText{Магнитный момент бесконечно малого участка цилиндра составляет:
+$$dm_z=i(z)\pi r^2dz{.}
+$$
+Для действующей на него силы $dF_x$ имеем:
+$$dF_x=dm_z\cfrac{dB_z}{dz}{.}
+$$
+Подставляя выражение для $i$, получим:
+$$dF_x=-\cfrac{\pi{r}^2x}{\mu_0}\left(\cfrac{dB_z}{dz}\right)^2dz{.}
+$$
+Воспользуемся выражением для $dB_z/dz$:
+$$dF_x=-\cfrac{\mu_0\pi{r}^2n^2I^2xR^4dz}{4(R^2+z^2)^3}{,}
+$$
+откуда с учётом большого удаление концов цилиндра от оснований соленоида:
+$$F_x\approx -\cfrac{\mu_0\pi{r}^2n^2I^2R^4x}{4}\int\limits_{-\infty}^{\infty}\cfrac{dz}{(R^2+z^2)^3}{.}
+$$
+Воспользуемся заменой переменной $z=R\operatorname{tg}\varphi$ и получим:
+$$F_x=\cfrac{\mu_0\pi{r}^2n^2I^2R^4x}{4}\int\limits_{-\infty}^{\infty}\cfrac{dz}{(R^2+z^2)^3}=\cfrac{\mu_0\pi{r}^2n^2I^2x}{4R}\int\limits_{-\pi/2}^{\pi/2}\cos^4\varphi d\varphi{.}
+$$
+Вычислим последний интеграл:
+$$\int\limits_{-\pi/2}^{\pi/2}\cos^4\varphi d\varphi=\int\limits_{-\pi/2}^{\pi/2}\left(\cfrac{1+\cos 2\varphi}{2}\right)^2d\varphi=\int\limits_{-\pi/2}^{\pi/2}\left(\cfrac{1}{4}+\cfrac{\cos 2\varphi}{2}+\cfrac{\cos^22\varphi}{4}\right)d\varphi=
+$$
+$$=\int\limits_{-\pi/2}^{\pi/2}\left(\cfrac{1}{4}+\cfrac{\cos 2\varphi}{2}+\cfrac{1}{4}\left(\cfrac{1+\cos 4\varphi}{2}\right)\right)d\varphi=\int\limits_{-\pi/2}^{\pi/2}\left(\cfrac{3}{8}+\cfrac{\cos 2\varphi}{2}+\cfrac{\cos 4\varphi}{8}\right)d\varphi=
+$$
+$$=\left(\cfrac{3\varphi}{8}+\cfrac{\sin 2\varphi}{4}+\cfrac{\sin 4\varphi}{32}\right)\Biggl|_{-\pi/2}^{\pi/2}=\cfrac{3\pi}{8}{.}
+$$
+Таким образом:}
+
+\ABlock{$$F_x=-\cfrac{3\pi^2\mu_0\pi r^2n^2I^2}{32R}x{.}
+$$}
+
+\QBlock{D4}{0.30}{Получите зависимость перемещения стержня $x$ от времени $t$. Ответ выразите через $\mu_0$, $r$, $R$, $n$, $I$ и $m$.}
+
+\QText{Запишем уравнение движения цилиндра:
+$$m\ddot{x}=-\cfrac{3\mu_0\pi^2 r^2n^2I^2}{32R}x\Rightarrow \omega^2_0=\cfrac{3\mu_0\pi^2 r^2n^2I^2}{32mR}\Rightarrow x(t)=A\sin\omega_0t+B\cos\omega_0t{.}
+$$
+Определим константы $A$ и $B$ из начальных условий:
+$$
+\begin{cases}
+x(0)=B=0\\
+v_x(0)=\omega_0A=v_0
+\end{cases}
+\Rightarrow A=\cfrac{v_0}{\omega_0}
+$$
+Таким образом:}
+
+\ABlock{$$x(t)=v_0\sqrt{\cfrac{32mR}{3\mu_0\pi^2{r}^2n^2I^2}}\sin\sqrt{\cfrac{3\mu_0\pi^2 r^2n^2I^2}{32mR}}t{.}
+$$}
+
+\end{document}

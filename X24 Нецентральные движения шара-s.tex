@@ -1,0 +1,368 @@
+
+\input{Preambula.tex}
+
+\newcommand\ProblemName{Нецентральные движения шара}
+
+\newcommand\Source{X24}
+
+\newcommand\Type{Решение}
+
+\input{Settings.tex}
+
+\QBlock{A1}{0.40}{Выразите компоненту скорости $\vec{u}_{A}$ точки $A$ через компоненту скорости $\vec{u}_C$ центра шара, его угловую скорость $\vec{\omega}$, а также радиус-вектор $\vec{r}$ в произвольный момент.
+Получите также производную по времени $\dot{\vec{u}}_A$ вектора $\vec{u}_A$. Ответ выразите через $\dot{\vec{u}}_C$, $\dot{\vec{\omega}}$ и $\vec{r}$.}
+
+\QText{Скорость точки $A$ задаётся выражением:
+$$\vec{v}_A=\vec{v}_C+\bigl[\vec{\omega}\times\vec{r}\bigr]{.}
+$$
+Поскольку вектор $\vec{r}$ перпендикулярен плоскости стены, имеем:}
+
+\ABlock{$$\vec{u}_A=\vec{u}_C+\bigl[\vec{\omega}\times\vec{r}\bigr]{.}
+$$}
+
+\QText{Поскольку стена плоская - вектор $\vec{r}$ остаётся постоянным в процессе движения, поэтому после дифференцирования имеем:}
+
+\ABlock{$$\dot{\vec{u}}_A=\dot{\vec{u}}_C+\bigl[\dot{\vec{\omega}}\times\vec{r}\bigr]{.}
+$$}
+
+\QBlock{A2}{0.60}{Определите силу трения $\vec{F}_0$, действующую на шар в начальный момент контакта со стеной. Ответ выразите через $\vec{e}_x$, $\vec{e}_z$, $\alpha$, $\mu$ и силу нормальной реакции стены $N_0$ в начальный момент.}
+
+\QText{В начальный момент имеем:
+$$\vec{u}_C(0)=v\sin\alpha\vec{e}_x\qquad \bigl[\vec{\omega}(0)\times\vec{r}\bigr]=-v\cos\alpha\vec{e}_z\Rightarrow \vec{u}_A(0)=v\left(\sin\alpha\vec{e}_x-\cos\alpha\vec{e}_z\right){.}
+$$
+Обратим внимание, что вектор $(\sin\alpha\vec{e}_x-\cos\alpha\vec{e}_z)$ является единичным.
+Сила трения $\vec{F}$ равна по модулю $\mu N$ и направлена противоположно компоненте скорости $\vec{u}_A$, поэтому:
+$$\vec{F}=-\cfrac{\vec{u}_A}{|\vec{u}_A|}\cdot \mu N{,}
+$$
+или же:}
+
+\ABlock{$$\vec{F}=\mu N(\cos\alpha\vec{e}_z-\sin\alpha\vec{e}_x){.}
+$$}
+
+\QBlock{A3}{1.00}{Докажите, что производная по времени $\dot{\vec{u}}_A$ компоненты скорости $\vec{u}_A$ связана с силой трения $\vec{F}$ соотношением:
+$$\dot{\vec{u}}_A=\cfrac{7\vec{F}}{2m}{.}
+$$
+Данный факт можно использовать далее, даже если вы не смогли его доказать.}
+
+\QText{Из теоремы о движении центра масс для шара следует:
+$$m\dot{\vec{u}}_C=\vec{F}{.}
+$$
+Пусть $I=2mR^2/5$ - момент инерции однородного шара относительно диаметра. Поскольку шар сферически симметричен, его момент импульса $\vec{L}_C$ относительно центра масс составляет:
+$$\vec{L}_C=I\vec{\omega}{.}
+$$
+Запишем основное уравнение динамики вращательного движения относительно центра масс шара:
+$$\cfrac{d\vec{L}_C}{dt}=I\dot{\vec{\omega}}=\vec{M}=\bigl[\vec{r}\times\vec{F}\bigr]{.}
+$$
+Умножая векторно слева на $\vec{r}$, получим:
+$$I\bigl[\vec{r}\times\dot{\vec{\omega}}\bigr]=\bigl[\vec{r}\times\bigl[\vec{r}\times\vec{F}\bigr]\bigr]=\vec{r}\bigl(\vec{r}\cdot\vec{F}\bigr)-r^2\vec{F}=-r^2\vec{F}\Rightarrow \vec{F}=\cfrac{I\bigl[\dot{\vec{\omega}}\times\vec{r}\bigr]}{r^2}{.}
+$$
+В последнем переходе мы учли, что $\vec{r}\perp\vec{F}$.
+Воспользуемся результатом пункта $\mathrm{A1}$:
+$$\dot{\vec{u}}_A=\dot{\vec{u}}_C+\bigl[\dot{\vec{\omega}}\times\vec{r}\bigr]=\cfrac{\vec{F}}{m}+\cfrac{\vec{F}r^2}{I}=\cfrac{7\vec{F}}{2m}{.}
+$$}
+
+\QBlock{A4}{0.50}{Определите компоненту скорости $\vec{u}_{A\text{к}}$ сразу после соударения, считая, что шар проскальзывает по стенке в течение всего времени соударения. Ответ выразите через $v$, $\alpha$, $\mu$, $\vec{e}_x$ и $\vec{e}_z$. 
+При каком максимальном значении коэффициента трения $\mu_{max}$ проскальзывание не прекращается в течение всего времени соударения? Ответ выразите через $\alpha$.}
+
+\QText{Вектор силы трения $\vec{F}$ направлен против компоненты скорости $\vec{u}_A$ и сонаправлен с производной компоненты скорости $\dot{\vec{u}}_A$. Из этого следует, что направления $\vec{u}_A$ и $\vec{F}$ сохраняются в процессе соударения. Тогда из пункта $\mathrm{A3}$ имеем:
+$$\cfrac{du_A}{dt}=-\cfrac{7F}{2m}=-\cfrac{7\mu N}{2m}\Rightarrow u_{A\text{к}}-u_A(0)=u_{A\text{к}}-v=-\cfrac{7\mu}{2m}\int\limits_{0}^t Ndt{.}
+$$
+До соударения компонента скорости центра шара $v_{Cy}(0)$ равна $-v\cos\alpha$. Поскольку удар упругий, сразу после соударения компонента скорости центра шара $v_{Cy}$ равна $v\cos\alpha$. Тогда для импульса силы реакции $N$ имеем:
+$$\int\limits_{0}^tNdt=\Delta{p}_y=2mv\cos\alpha{.}
+$$
+Таким образом:
+$$u_{A\text{к}}=v(1-7\mu\cos\alpha){,}
+$$
+Проскальзывание не прекращается, если $u_{A\text{к}}\geq 0$, что приводит к следующему ограничению на $\mu$:
+$$\mu\leq\cfrac{1}{7\cos\alpha}{.}
+$$
+Если же $\mu\geq 1/(7\cos\alpha)$, то $u_{A\text{к}}=0$.
+Окончательно:}
+
+\ABlock{$$\vec{u}_{A\text{к}}=
+\begin{cases}
+v(1-7\mu\cos\alpha)(\sin\alpha\vec{e}_x-\cos\alpha\vec{e}_z)\quad\text{при}\quad\mu\leq\cfrac{1}{7\cos\alpha}\\
+0\quad\text{при}\quad\mu\geq\cfrac{1}{7\cos\alpha}
+\end{cases}
+$$}
+
+\QBlock{A5}{0.60}{При $\mu{<}\mu_{max}$ определите скорость центра шара $\vec{v}_{C\text{к}}$, а также под каким углом $\beta$ к горизонту она направлена  сразу после соударения. Ответы выразите через $v$, $\alpha$, $\mu$, $\vec{e}_x$, $\vec{e}_y$ и $\vec{e}_z$.}
+
+\QText{Для угла $\beta$ имеем:
+$$\beta=\operatorname{arctg}\cfrac{v_{Cz}}{\sqrt{v^2_{Cx}+v^2_{Cy}}}{.}
+$$
+После удара вектор скорости центра шара составляет:
+$$\vec{v}_C=v\cos\alpha\vec{e}_y+\vec{u}_C{.}
+$$
+Для $\vec{u}_C$ имеем:
+$$\vec{u}_C=\vec{u}_C(0)+\int\limits_0^t\cfrac{\vec{F}dt}{m}=v\sin\alpha\vec{e}_x+\cfrac{2(\vec{u}_A-\vec{u}_A(0))}{7}
+$$
+При $\mu\leq 1/(7\cos\alpha)$ имеем:
+$$\vec{u}_C=v\sin\alpha\vec{e}_x-\cfrac{2}{7}\cdot 7\mu v\cos\alpha(\sin\alpha\vec{e}_x-\cos\alpha\vec{e}_z)=v\sin\alpha(1-2\mu\cos\alpha)\vec{e}_x+2\mu v\cos^2\alpha\vec{e}_z{.}
+$$
+Таким образом:
+$$\vec{v}_C=v\sin\alpha(1-2\mu\cos\alpha)\vec{e}_x+v\cos\alpha\vec{e}_y+2\mu v\cos^2\alpha\vec{e}_z{,}
+$$
+или же:
+$$\beta=\operatorname{arctg}\cfrac{2\mu\cos^2\alpha}{\sqrt{\cos^2\alpha+\sin^2\alpha(1-2\mu\cos\alpha)^2}}{.}
+$$
+Если же $\mu\geq 1/(7\cos\alpha)$ - $\vec{u}_A=0$. Тогда:
+$$\vec{u}_C=v\sin\alpha\vec{e}_x-\cfrac{2v(\sin\alpha\vec{e}_x-\cos\alpha\vec{e}_z)}{7}=\cfrac{5v\sin\alpha\vec{e}_x}{7}+\cfrac{2v\cos\alpha\vec{e}_z}{7}{.}
+$$
+Таким образом:
+$$\vec{v}_C=\cfrac{5v\sin\alpha\vec{e}_x}{7}+v\cos\alpha\vec{e}_y+\cfrac{2v\cos\alpha\vec{e}_z}{7}{,}
+$$
+или же:
+$$\beta=\operatorname{arctg}\cfrac{2\cos\alpha}{\sqrt{(5\sin\alpha)^2+(7\cos\alpha)^2}}{.}
+$$
+Окончательно:}
+
+\ABlock{$$\beta=\begin{cases}
+\operatorname{arctg}\cfrac{2\mu\cos^2\alpha}{\sqrt{\cos^2\alpha+\sin^2\alpha(1-2\mu\cos\alpha)^2}}\quad\text{при}\quad \mu\leq\cfrac{1}{7\cos\alpha}\\
+\operatorname{arctg}\cfrac{2\cos\alpha}{\sqrt{(5\sin\alpha)^2+(7\cos\alpha)^2}}\quad\text{при}\quad \mu\geq\cfrac{1}{7\cos\alpha}
+\end{cases}
+$$}
+
+\QBlock{A6}{0.40}{При $\mu{<}\mu_{max}$ определите координаты $x_C$, $y_C$ центра шара в момент его падения на стол. Ответы выразите через $v$, $g$, $\mu$ и $\alpha$.}
+
+\QText{Шар упадёт на поверхность стола через время $t$, равное:
+$$t=\cfrac{2v_{Cz}}{g}{.}
+$$
+Тогда для координат $x_C$ и $y_C$ имеем:
+$$x_C=v_{Cx}t=\cfrac{2v_{Cx}v_{Cz}}{g}\qquad y_C=v_{Cy}t=\cfrac{2v_{Cy}v_{Cz}}{g}{.}
+$$
+Подставляя $v_{Cx}$, $v_{Cy}$ и $v_{Cz}$ при разных значениях $\mu$, получим:}
+
+\ABlock{$$x_C=\begin{cases}
+\cfrac{4\mu v^2\cos^2\alpha\sin\alpha(1-2\mu\cos\alpha)}{g}\quad\text{при}\quad \mu\leq\cfrac{1}{7\cos\alpha}\\
+\cfrac{10v^2\sin 2\alpha}{49g}\quad\text{при}\quad \mu\geq\cfrac{1}{7\cos\alpha}
+\end{cases}
+$$}
+
+\ABlock{$$y_C=\begin{cases}
+\cfrac{4\mu v^2\cos^3\alpha}{g}\quad\text{при}\quad \mu\leq\cfrac{1}{7\cos\alpha}\\
+\cfrac{4v^2\cos^2\alpha}{7g}\quad\text{при}\quad \mu\geq\cfrac{1}{7\cos\alpha}
+\end{cases}
+$$}
+
+\QBlock{A7}{1.00}{При произвольных значениях $\mu$ определите количество теплоты $Q$, выделившееся в процессе соударения шара со стенкой. Ответ выразите через $m$, $v$, $\mu$ и $\alpha$. </p><p>\textit{Примечание: }явное вычисление работы силы трения существенно упростит решение задачи.}
+
+\QText{Для мощности $P_F$ силы трения имеем:
+$$P_F=\vec{F}\cdot\vec{u}_A=\cfrac{2m\vec{u}_A\cdot\dot{\vec{u}}_A}{7}{.}
+$$
+Тогда для количества теплоты $Q$ имеем:
+$$Q=-\int\limits_{0}^{t}P_Fdt=\int\limits_{u_{A\text{к}}}^{u_{A}(0)}\cfrac{2mu_A\dot{u}_A}{7}=\cfrac{m(u^2_A(0)-u^2_{A\text{к}})}{7}{.}
+$$
+Учитывая, что $u_A(0)=v$, а также выражение для $u_{A\text{к}}(\mu)$, получим:}
+
+\ABlock{$$Q=\begin{cases}
+mv^2(2\mu\cos\alpha-7\mu^2\cos^2\alpha)\quad\text{при}\quad \mu\leq\cfrac{1}{7\cos\alpha}\\
+\cfrac{mv^2}{7}\quad\text{при}\quad \mu\geq\cfrac{1}{7\cos\alpha}
+\end{cases}
+$$}
+
+\QBlock{B1}{0.20}{Определите компоненты вектора скорости центра шара $v_\varphi$ и $v_z$ в цилиндрической системе координат. Ответы выразите через $r$, $\dot\varphi$ и $\dot{z}$.}
+
+\QText{Радиус-вектор $\vec{r}_C$ центра шара можно представить в следующей форме:
+$$\vec{r}_C=r\vec{e}_r+z\vec{e}_z{.}
+$$
+Дифференцируя:
+$$\vec{v}_C=\cfrac{d\vec{r}_C}{dt}=r\dot{\vec{e}}_r+\dot{z}\vec{e}_z=r\dot{\varphi}\vec{e}_\varphi+\dot{z}\vec{e}_z{.}
+$$
+Таким образом:}
+
+\ABlock{$$v_\varphi=r\dot{\varphi}\qquad v_z=\dot{z}{.}
+$$}
+
+\QBlock{B2}{0.30}{Определите компоненты вектора ускорения центра шара $a_r$, $a_\varphi$ и $a_z$ в цилиндрической системе координат. Ответы выразите через $r$, $v_\varphi$, $\dot{v}_\varphi$ и $\dot{v}_z$.}
+
+\QText{Продифференцируем вектор скорости по времени:
+$$\vec{a}_C=\cfrac{d\vec{v}_C}{dt}=v_\varphi\dot{\vec{e}}_\varphi+\dot{v}_\varphi\vec{e}_\varphi+\dot{v}_z\vec{e}_z=-v_\varphi\dot{\varphi}\vec{e}_r+\dot{v}_\varphi\vec{e}_\varphi+\dot{v}_z\vec{e}_z{.}
+$$
+Учитывая, что $v_\varphi=r\dot{\varphi}$, получим:}
+
+\ABlock{$$a_r=-\cfrac{v^2_\varphi}{r}\qquad a_\varphi=\dot{v}_\varphi\qquad a_z=\dot{v}_z{.}
+$$}
+
+\QBlock{B3}{0.40}{Из условия отсутствия проскальзывания определите компоненты угловой скорости шара $\omega_\varphi$ и $\omega_z$ в цилиндрической системе координат. Ответы выразите через $r$, $v_\varphi$ и $v_z$.}
+
+\QText{Для скорости точки $A$ шара, в которой он контактирует с краем стола, имеем:
+$$\vec{v}_A=\vec{v}_C+\bigl[\vec{\omega}\times\overrightarrow{CA}\bigr]{,}
+$$
+где $\overrightarrow{CA}$ - вектор, проведённый от центра $C$ шара в точку $A$.
+Запишем условие равенства нулю скорости точки $A$ шара, в которой он контактирует с краем стола:
+$$v_{A\varphi}=v_\varphi-\omega_zr\qquad v_{Az}=v_z+\omega_\varphi r{.}
+$$
+Таким образом:}
+
+\ABlock{$$\omega_z=\cfrac{v_\varphi}{r}\qquad \omega_\varphi=-\cfrac{v_z}{r}{.}
+$$}
+
+\QBlock{C1}{0.80}{Определите компоненту силу трения $F_\varphi(\varphi)$, действующую на шар, а также компоненту ускорения $a_\varphi(\varphi)$ его центра. Ответы выразите через массу шара $m$, $g$ и $\varphi$.}
+
+\QText{Запишем теорему о движении центра масс для шара в проекции на ось, направленную вдоль вектора $e_\varphi$:
+$$ma_\varphi=F_\varphi+mg\sin\varphi{.}
+$$
+Запишем уравнение динамики вращательного движения относительно оси $z$, проходящей через центр шара:
+$$I_C\varepsilon_z=I_C\dot{\omega}_z=-rF_\varphi{.}
+$$
+Поскольку $\dot{\omega}_z=\dot{v}_\varphi/r=a_\varphi/r$, после деления уравнений получим:
+$$\cfrac{mr^2}{I_C}=-\cfrac{F_\varphi+mg\sin\varphi}{F_\varphi}{,}
+$$
+откуда:}
+
+\ABlock{$$F_\varphi=-\cfrac{mg\sin\varphi}{1+mr^2/I_C}=-\cfrac{2mg\sin\varphi}{7}{.}
+$$}
+
+\QText{Исключая $F_\varphi$, получим:}
+
+\ABlock{$$a_\varphi=\cfrac{mgr^2\sin\varphi}{I_C+mr^2}=\cfrac{5g\sin\varphi}{7}{.}
+$$}
+
+\QBlock{C2}{0.50}{Получите зависимость $v_\varphi(\varphi)$. Ответ выразите через $v$, $g$, $r$, $\alpha$ и $\varphi$.}
+
+\QText{Умножая выражение для $v_\varphi$ и учитывая, что $v_\varphi=r\dot{\varphi}$, получим:
+$$a_\varphi v_\varphi=v_\varphi\dot{v}_\varphi=\cfrac{5gv_\varphi\sin\varphi}{7}=\cfrac{5gr\sin\varphi\dot{\varphi}}{7}{.}
+$$
+Проинтегрируем полученное выражение по времени:
+$$\int\limits_{v\cos\alpha}^{v_\varphi(\varphi)}v_\varphi dv_\varphi=\int\limits_{0}^{\varphi}\cfrac{5gr\sin\varphi d\varphi}{7}\Rightarrow \cfrac{v^2_\varphi-v^2\cos^2\alpha}{2}=\cfrac{5gr(1-\cos\varphi)}{7}{.}
+$$
+Таким образом:}
+
+\ABlock{$$v_\varphi=\sqrt{v^2\cos^2\alpha+\cfrac{10gr(1-\cos\varphi)}{7}}{.}
+$$}
+
+\QBlock{C3}{0.20}{При каком условии шар не отрывается от стола в момент, когда нижняя точка шара достигает его края? Запишите это условие через $v$, $g$, $r$ и $\alpha$. Во всех дальнейших пунктах считайте, что это условие выполняется.}
+
+\QText{Для силы реакции $N$ в момент, когда нижняя точка шара достигает края стола, для силы реакции $N$ имеем:
+$$N=mg-\cfrac{mv^2\cos^2\alpha}{r}{.}
+$$
+Отрыва нет при условии $N\geq{0}$, поэтому:}
+
+\ABlock{$$v\cos\alpha\leq\sqrt{gr}{.}
+$$}
+
+\QBlock{C4}{0.50}{Определите угол $\varphi_1$ в момент отрыва шара от стола. Ответ выразите через $v$, $g$, $r$ и $\alpha$.}
+
+\QText{В момент отрыва шара от стола $N=0$, поэтому имеем:
+$$N=mg\cos\varphi_1-\cfrac{mv^2_{\varphi_1}}{r}{.}
+$$
+Приравняем два выражения для $v^2_\varphi$:
+$$v^2_{\varphi_1}=gr\cos\varphi_1=v^2\cos^2\alpha+\cfrac{10gr(1-\cos\varphi_1)}{7}{.}
+$$
+Таким образом:
+$$\cos\varphi_1=\cfrac{10gr+7v^2\cos^2\alpha}{17gr}{,}
+$$
+откуда для $\varphi_1$ находим:}
+
+\ABlock{$$\varphi_1=\arccos\left(\cfrac{10}{17}+\cfrac{7v^2\cos^2\alpha}{17gr}\right){.}
+$$}
+
+\QBlock{D1}{0.50}{Выразите кинетическую энергию шара $E_k$ через $m$, $v_\varphi$, $v_z$, $\omega_r$ и $r$.}
+
+\QText{Воспользуемся теоремой Кёнига:
+$$E_k=\cfrac{mv^2_C}{2}+\cfrac{I_C\omega^2}{2}=\cfrac{mv^2_\varphi}{2}+\cfrac{mv^2_z}{2}+\cfrac{I_C\omega^2_r}{2}+\cfrac{I_C\omega^2_\varphi}{2}+\cfrac{I_C\omega^2_z}{2}{.}
+$$
+Подставляя $\omega_\varphi$ и $\omega_z$, получим:}
+
+\ABlock{$$E_k=\left(m+\cfrac{I_C}{r^2}\right)\cfrac{v^2_\varphi}{2}+\left(m+\cfrac{I_C}{r^2}\right)\cfrac{v^2_z}{2}+\cfrac{I_C\omega^2_r}{2}=\cfrac{7m(v^2_\varphi+v^2_z)}{10}+\cfrac{mr^2\omega^2_r}{5}{.}
+$$}
+
+\QBlock{D2}{0.60}{Запишите для шара закон сохранения механической энергии. Комбинируя его с результатом пункта $\mathrm{C2}$, покажите, что величины $\omega_r$ и $v_z$ связаны соотношением:
+$$1=\cfrac{\omega^2_r}{A^2}+\cfrac{v^2_z}{B^2}{,}
+$$
+где $A{,}B>0$ - постоянные коэффициенты.
+Определите $A$ и $B$. Ответы выразите через $v$, $r$ и $\alpha$.}
+
+\QText{Закон сохранения энергии выглядит следующим образом:
+$$E_k=\cfrac{7m(v^2_\varphi+v^2_z)}{10}+\cfrac{mr^2\omega^2_r}{5}=E_{k0}+A_\text{тяж}=\cfrac{7mv^2}{10}+mgr(1-\cos\varphi){.}
+$$
+откуда:
+$$v^2_\varphi=v^2+\cfrac{10gr(1-\cos\varphi)}{7}-v^2_z-\cfrac{2\omega^2_rr^2}{7}{.}
+$$
+Подставляя зависимость $v^2_\varphi(\varphi)$, получим:
+$$v^2\cos^2\alpha+\cfrac{10gr(1-\cos\varphi)}{7}=v^2+\cfrac{10gr(1-\cos\varphi)}{7}-v^2_z-\cfrac{2\omega^2_rr^2}{7}{,}
+$$
+откуда:
+$$v^2_z+\cfrac{2\omega^2_rr^2}{7}=v^2\sin^2\alpha\Rightarrow 1=\cfrac{v^2_z}{v^2\sin^2\alpha}+\cfrac{2\omega^2_rr^2}{7v^2\sin^2\alpha}{.}
+$$
+Для $A$ и $B$ имеем:}
+
+\ABlock{$$A=\sqrt{\cfrac{7}{2}}\cfrac{v\sin\alpha}{r}\qquad B=v\sin\alpha{.}
+$$}
+
+\QBlock{D3}{0.50}{Вектор углового ускорения $\vec{\varepsilon}$ шара может быть представлен в виде:
+$$\vec{\varepsilon}=\varepsilon_r\vec{e}_r+\varepsilon_\varphi\vec{e}_\varphi+\varepsilon_z\vec{e}_z{.}
+$$
+Используя уравнение динамики вращательного движения относительно центра шара, покажите, что $\varepsilon_r=0$. Используя полученное равенство, выразите $\dot{\omega}_r$ через $\dot{\varphi}$, $v_z$ и $r$.}
+
+\QText{Из уравнения динамики вращательного движения относительно центра шара имеем:
+$$\cfrac{d\vec{L}_C}{dt}=I\vec{\varepsilon}=\bigl[\overrightarrow{CA}\times\left(\vec{F}+\vec{N}\right)\bigr]{.}
+$$
+Поскольку $\vec{N}\parallel\overrightarrow{CA}$, имеем:
+$$I\vec{\varepsilon}=\bigl[\overrightarrow{CA}\times\vec{F}\bigr]{.}
+$$}
+
+\ABlock{Поскольку $\vec{\varepsilon}\perp\overrightarrow{CA}$, компонента углового ускорения $\varepsilon_r=0$.}
+
+\QText{Воспользуемся выражением для углового ускорения в цилиндрической системе координат:
+$$\varepsilon_r=\dot{\omega}_r-\dot{\varphi}\omega_\varphi=0{,}
+$$
+откуда:}
+
+\ABlock{$$\dot{\omega}_r=-\cfrac{\dot{\varphi}v_z}{r}{.}
+$$}
+
+\QBlock{D4}{1.20}{Комбинируя результаты пунктов $\mathrm{D2}$ и $\mathrm{D3}$, получите зависимости $\omega_r(\varphi)$ и $v_z(\varphi)$. Ответы выразите через $v$, $\alpha$, $r$ и $\varphi$.}
+
+\QText{Воспользуемся результатом пункта $\mathrm{B4}$:
+$$\dot{\omega}_r=-\cfrac{\dot{\varphi}v_z}{r}{.}
+$$
+Выражая $v_z$ и подставляя в уравнение, полученное в предыдущем пункте, находим:
+$$1=\cfrac{\omega^2_r}{A^2}+\cfrac{r^2\dot{\omega}^2_r}{B^2\dot{\varphi}^2}{.}
+$$
+Обратим внимание, что это уравнение с разделяющимися переменными $\omega_r$ и $\varphi$:
+$$d\varphi=-\cfrac{r}{B}\cfrac{d\omega_r}{\sqrt{1-\cfrac{\omega^2_r}{A^2}}}{.}
+$$
+Здесь мы учли, что $\dot{\omega}_r{<}0$, а значит и $\omega_r{<}0$.
+Вводя переменную $t=\omega_r/A$ и интегрируя, находим:
+$$\varphi=-\cfrac{rA}{B}\int\limits_{0}^{t(\varphi)}\cfrac{dt}{\sqrt{1-t^2}}=-\cfrac{rA}{B}\arcsin t\Biggl|_{0}^{t(\varphi)}\Rightarrow t(\varphi)=-\sin\left(\cfrac{B\varphi}{rA}\right){,}
+$$
+или же:
+$$\omega_r(\varphi)=-A\sin\left(\cfrac{B\varphi}{rA}\right){.}
+$$
+Подставляя $t(\varphi)$ в уравнение, связывающее $v_z$ и $\omega_r$, находим:
+$$\cfrac{v^2_z}{B^2}=1-t^2=\cos^2\left(\cfrac{B\varphi}{rA}\right){,}
+$$
+или же:
+$$v_z=B\cos\left(\cfrac{B\varphi}{rA}\right){,}
+$$
+поскольку $v_z(0){>}0$.
+Окончательно:}
+
+\ABlock{$$\omega_r(\varphi)=-\sqrt{\cfrac{7}{2}}\cfrac{v\sin\alpha}{r}\sin\left(\sqrt{\cfrac{2}{7}}\varphi\right)\qquad v_z=v\sin\alpha\cos\left(\sqrt{\cfrac{2}{7}}\varphi\right){.}
+$$}
+
+\QBlock{D5}{0.80}{Рассмотрим предельный переход, когда угол $\alpha\to\pi/2$, т.е движение шара до контакта с краем стола происходит практически параллельно ему.
+Определите проекцию скорости $v_z$ центра шара, а также проекцию его угловой скорости $\omega_y$ на ось $y$, направленную вертикально вниз, в момент отрыва шара от стола. Ответы выразите через $v$ и $r$. Все численные коэффициенты в ответе должны быть аналитическими, а не приближёнными!}
+
+\QText{При $\alpha=\pi/2$ для $\varphi_1$ имеем:
+$$\varphi_1=\arccos\left(\cfrac{10}{17}\right){.}
+$$}
+
+\ABlock{Тогда для скорости $v_z$ находим:
+$$v_z=v\cos\left(\sqrt{\cfrac{2}{7}}\arccos\left(\cfrac{10}{17}\right)\right){.}
+$$}
+
+\QText{Проекция угловой скорости шара на ось $y$, направленную вертикально вниз, равна:
+$$\omega_y=\omega_\varphi\sin\varphi_1-\omega_r\cos\varphi_1{.}
+$$
+Подставляя $\omega_r$, $\omega_\varphi$, получим:
+$$\omega_y=\cfrac{v}{r}\left(\sqrt{\cfrac{7}{2}}\cos\varphi_1\sin\left(\sqrt{\cfrac{2}{7}}\varphi_1\right)-\sin\varphi_1\cos\left(\sqrt{\cfrac{2}{7}}\varphi_1\right)\right){.}
+$$
+После подстановки $\varphi_1$ находим:}
+
+\ABlock{$$\omega_y=\cfrac{v}{r}\left(\sqrt{\cfrac{7}{2}}\cfrac{10}{17}\sin\left(\sqrt{\cfrac{2}{7}}\arccos\left(\cfrac{10}{17}\right)\right)-\cfrac{\sqrt{189}}{17}\cos\left(\sqrt{\cfrac{2}{7}}\arccos\left(\cfrac{10}{17}\right)\right)\right){.}
+$$}
+
+\end{document}
