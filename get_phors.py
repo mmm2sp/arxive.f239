@@ -32,8 +32,12 @@ def change_html(data, url_type):
     data = data.replace("</em>", "}")
 
     #Распознование списков
-    data = data.replace("<ul>", "<p> \\begin{itemize} \n")
-    data = data.replace("</ul>", "\\end{itemize} </p> ")
+    data = data.replace("<ul>", "\\begin{itemize} \n")
+    data = data.replace("</ul>", "\\end{itemize}")
+
+    data = data.replace("<ol>", "\\begin{itemize} \n")
+    data = data.replace("</ol>", "\\end{itemize}")
+    
     data = data.replace("<li>", "\\item ")
     data = data.replace("</li>", "\n")
 
@@ -48,11 +52,21 @@ def change_html(data, url_type):
             str_last_idx = data.find("</tr>", str_idx) 
             col_num = data[str_idx:str_last_idx:].count("</td>")
             table_type = "|"+"c|"*col_num
-            data = data[:idx_0:] + "<p> \\begin{table}[h!] \\centering \\begin{tabular}{"+table_type+"} \\hline \n" + data[idx + len("<tbody>")::]
+
+            end_table_idx = data.find("</tbody></table></figure>", str_last_idx)
+
+            if (data.rfind("</p>", 0, idx_0) != -1) and (idx_0 - data.rfind("</p>", 0, idx_0)<10): #Если недавно закончился </p>, то надо и таблицу окружить <p></p>
+                data = data[:idx_0:] + " <p> \\begin{tabular}{"+table_type+"} \\hline \n" + data[idx + len("<tbody>"):end_table_idx:] + \
+                "\\end{tabular} </p>" + data[end_table_idx+len("</tbody></table></figure>")::]
+                
+            else:
+                data = data[:idx_0:] + "\\begin{tabular}{"+table_type+"} \\hline \n" + data[idx + len("<tbody>"):end_table_idx:] + \
+                "\\end{tabular}" + data[end_table_idx+len("</tbody></table></figure>")::]
+
             idx_0 = data.find('<figure class="table">')
             idx = data.find("<tbody>")
 
-        data = data.replace("</tbody>", "\\end{tabular} \\end{table} </p> ")
+        #data = data.replace("</tbody></table></figure>", "\\end{tabular} </p>")
 
     ## Версия для менее стандартных таблиц. Вроде тоже работает, но пока не нужна
     ##
@@ -72,7 +86,7 @@ def change_html(data, url_type):
     ##    data = data.replace("<tr>", "")
     ##    data = data.replace("</tr>", '\\\ \n \\hline \n')
     ##    data = data.replace("</td>", "")
-        data = data.replace("</tbody>", "\\end{tabular} \\end{table} </p> ")
+        #data = data.replace("</tbody>", "\\end{tabular} \\end{table} </p> ")
         data = data.replace("<tr>", "")
         data = data.replace("</tr>", '\\\ \n \\hline \n')
         data = data.replace("</td><td>", " & ")
@@ -164,7 +178,7 @@ def save_MScheme(f, data):
     if first_idx != -1:
         last_idx = data.find('</td>', first_idx)
         text = data[first_idx + len('<td style="width:90%;">'):last_idx:]
-        tmp_idx_0 = text.find('<span', 0)
+        tmp_idx_0 = text.find('<span class="label', 0)
         if tmp_idx_0 >= 0:
             tmp_idx_1 = text.find('>', tmp_idx_0)
             tmp_idx_2 = text.find('</span>', tmp_idx_1)
@@ -174,6 +188,14 @@ def save_MScheme(f, data):
             version = ""    
        
         text = no_spaces(text)
+
+        bf_first_idx = text.find('<span class="font-weight-boldest">') #Если текст жирный
+        if bf_first_idx != -1:
+            bf_last_idx = text.find('</span>', bf_first_idx)
+            bold_text = text[bf_first_idx + len('<span class="font-weight-boldest">'):bf_last_idx:]
+            bold_text = no_spaces(bold_text)
+            text = "\\textbf{"+bold_text+"}"
+
         text = insert_picture(f, text)
 
         first_idx = data.find('<td style="width:10%; text-align: center;">', last_idx)
@@ -246,10 +268,12 @@ def save(f, data):
         save(f, data[last_idx + len('</p>')::])
         return
 
+   
     #В дате не осталось <p>...</p>
     data = clear_data(data, 'a') #Удаление неинформативного куска
+    
    
-    if max(data.find('</'), data.find('/>'), data.find('<!')) == -1: #Если в дате только текст
+    if max(data.find('</'), data.find('/>'), data.find('<!'), data.find('">')) == -1: #Если в дате только текст
         data = no_spaces(data)
         if data == "": return
         f.write("\QText{" + data + "}")
@@ -261,12 +285,13 @@ def save(f, data):
         if  first_idx != -1:
             save_QBlock(f, data)
         else:
-            first_idx = data.find('<span class="font-weight-boldest">') #Если в дате есть заголовок. 
+            first_idx = data.find('<tr>')  #Если в дате есть html-таблица. То есть режим разбалловки.
             if first_idx != -1:
-                last_idx = data.find('</span>', first_idx)
-                chapter = data[first_idx + len('<span class="font-weight-boldest">'):last_idx:]
-                chapter = no_spaces(chapter)
-                f.write("\Chapter{" + chapter + "}\n\n")
+                last_idx = data.find('</tr>', first_idx)
+                save(f, data[:first_idx:])
+                save_MScheme(f, data[first_idx + len('<tr>'): last_idx:])
+                save(f, data[last_idx + len('</tr>')::])
+            
             else:
                 first_idx = data.find('<span>Ответ:') #Если в дате есть блок с ответом. 
                 if first_idx != -1:
@@ -279,12 +304,12 @@ def save(f, data):
                     f.write("\ABlock{" + answer_block + "}\n\n")
                     save(f, data[last_idx + len('</span>')::])
                 else:
-                    first_idx = data.find('<tr>')
+                    first_idx = data.find('<span class="font-weight-boldest">') #Если в дате есть заголовок.
                     if first_idx != -1:
-                        last_idx = data.find('</tr>', first_idx)
-                        save(f, data[:first_idx:])
-                        save_MScheme(f, data[first_idx + len('<tr>'): last_idx:])
-                        save(f, data[last_idx + len('</tr>')::])
+                        last_idx = data.find('</span>', first_idx)
+                        chapter = data[first_idx + len('<span class="font-weight-boldest">'):last_idx:]
+                        chapter = no_spaces(chapter)
+                        f.write("\Chapter{" + chapter + "}\n\n")
                     else:
                         #Картинка
                         data = insert_picture(f, data)
